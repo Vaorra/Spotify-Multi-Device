@@ -7,7 +7,7 @@ import { Lobby } from "./lobby";
 })
 export class LobbyService {
 
-    endpoint: string = "https://api.smd.neture.dev/";
+    endpoint: string = "https://api.smd.neture.dev";
 
     header: HttpHeaders = new HttpHeaders({
         "Content-Type": "application/json"
@@ -18,6 +18,14 @@ export class LobbyService {
     }
 
     async getLobbyFromUser(spotifId: string) {
-        return await this.http.get<Lobby>(this.endpoint + "lobby", { headers: this.header, params: { "userId": spotifId }}).toPromise();
+        return await this.http.get<Lobby>(this.endpoint + "/lobbies", { headers: this.header, params: { "userId": spotifId }}).toPromise();
+    }
+
+    async doesLobbyExist(lobbyId: string) {
+
+    }
+
+    async joinLobby(spotifId: string, lobbyId: string) {
+
     }
 }

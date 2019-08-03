@@ -6,7 +6,7 @@ import { Observable } from "tns-core-modules/ui/page/page";
     providedIn: "root"
 })
 export class AuthenticationService {
-    endpoint: string = "https://api.smd.neture.dev/";
+    endpoint: string = "https://api.smd.neture.dev";
     spotifyId: string = undefined;
 
     header: HttpHeaders = new HttpHeaders({
@@ -26,7 +26,7 @@ export class AuthenticationService {
     }
 
     async register(state: string) {
-        await this.http.get(this.endpoint + "identification/" + state, { headers: this.header }).toPromise().then((result) => {
+        await this.http.get(this.endpoint + "/identification/" + state, { headers: this.header }).toPromise().then((result) => {
             this.spotifyId = result["spotifyId"];
         }, (error) => {
             console.log(error);
@@ -34,7 +34,7 @@ export class AuthenticationService {
     }
 
     async logout() {
-        await this.http.get(this.endpoint + "logout/" + this.spotifyId, { headers: this.header }).toPromise();
+        await this.http.post(this.endpoint + "/logout/" + this.spotifyId, { headers: this.header }).toPromise();
         this.spotifyId = undefined;
     }
 }
