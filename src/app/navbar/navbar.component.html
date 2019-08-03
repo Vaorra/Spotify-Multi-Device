@@ -1,0 +1,11 @@
+<ActionBar *ngIf="!back" title="Spotify Multi Device" class="action-bar">
+    <ActionItem>
+        <StackLayout paddingRight="5">
+            <Button *ngIf="!loggedIn" text="Log In" id="login-button" height="40" class="m-5" (tap)="onLogin()"></Button>
+            <Button *ngIf="loggedIn" text="Log Out" id="login-button" height="40" class="m-5" (tap)="onLogout()"></Button>
+        </StackLayout>
+    </ActionItem>
+</ActionBar>
+<ActionBar *ngIf="back" title="Spotify Multi Device" class="action-bar">
+    <NavigationButton ios.systemIcon="1" android.systemIcon="ic_menu_close_clear_cancel" (tap)="goBack()"></NavigationButton>
+</ActionBar>

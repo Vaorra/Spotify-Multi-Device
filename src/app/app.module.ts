@@ -1,10 +1,16 @@
 import { NgModule, NO_ERRORS_SCHEMA } from "@angular/core";
 import { NativeScriptModule } from "nativescript-angular/nativescript.module";
+import { NativeScriptFormsModule } from "nativescript-angular/forms";
+import { NativeScriptHttpClientModule } from "nativescript-angular/http-client";
 
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
-import { ItemsComponent } from "./item/items.component";
-import { ItemDetailComponent } from "./item/item-detail.component";
+import { HomeComponent } from "./sites/home.component";
+import { NavbarComponent } from "./navbar/navbar.component";
+import { LobbyComponent } from "./lobby/lobby.component";
+import { FriendComponent } from "./friends/friends.component";
+import { PlayerComponent } from "./player/player.component";
+import { LoginComponent } from "./sites/login.component";
 
 // Uncomment and add to NgModule imports if you need to use two-way binding
 // import { NativeScriptFormsModule } from "nativescript-angular/forms";
@@ -18,12 +24,20 @@ import { ItemDetailComponent } from "./item/item-detail.component";
     ],
     imports: [
         NativeScriptModule,
+        NativeScriptFormsModule,
+        NativeScriptHttpClientModule,
         AppRoutingModule
     ],
     declarations: [
         AppComponent,
-        ItemsComponent,
-        ItemDetailComponent
+        //Parts
+        NavbarComponent,
+        PlayerComponent,
+        LobbyComponent,
+        FriendComponent,
+        //Sites
+        HomeComponent,
+        LoginComponent
     ],
     providers: [],
     schemas: [
