@@ -27,12 +27,15 @@ export class LobbyComponent implements OnInit {
 
         if (this.spotifyId !== undefined) {
             this.lobby = await this.lobbyService.getLobbyFromUser(this.spotifyId);
+            console.log(this.lobby);
         }
-        console.log("Init with Spotify ID: " + this.spotifyId);
+        console.log("Init with Spotify Id: " + this.spotifyId);
     }
 
-    onCreateLobby() {
+    async onCreateLobby() {
         console.log("CREATE");
+
+        await this.lobbyService.createLobby(this.spotifyId);
     }
 
     onJoinLobby() {

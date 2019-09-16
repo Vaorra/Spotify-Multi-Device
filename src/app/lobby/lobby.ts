@@ -9,8 +9,8 @@ export interface Lobby {
 
 export interface User {
     spotifyId: string,
-    spotifyDisplayName: string,
-    spotifyProfilePictureUrl: string
+    spotifyDisplayName: string | undefined,
+    spotifyProfilePictureUrl: string | undefined
 }
 
 export interface Song {

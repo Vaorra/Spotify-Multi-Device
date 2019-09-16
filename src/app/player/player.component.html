@@ -1,5 +1,5 @@
-<GridLayout *ngIf="lobby" rows="1*,1*,1*,2*" columns="1*,1*,1*,1*" width="100%" height="140" class="player" backgroundColor="" padding="10">
-    <Label row="0" col="0" colSpan="4" [text]="songName + ' - ' + artistNames.toString()" class="h3"></Label>
+<GridLayout *ngIf="song" rows="1*,1*,1*,2*" columns="1*,1*,1*,1*" width="100%" height="140" class="player" backgroundColor="" padding="10">
+    <Label row="0" col="0" colSpan="4" [text]="song.name + ' - ' + song.artistNames.toString()" class="h3"></Label>
     <Slider row="1" col="0" colSpan="4" [(ngModel)]="playerCurrentSeconds" minValue="0" [maxValue]="playerMaxSeconds"></Slider>
     <Label row="2" col="0" [text]="getMinutes() + ':' + getSeconds()" textAlignment="left"></Label>
     <Label row="2" col="3" text="5:00" textAlignment="right"></Label>

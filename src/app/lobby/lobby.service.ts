@@ -14,15 +14,14 @@ export class LobbyService {
     });
 
     constructor(private http: HttpClient) {
-
     }
 
     async getLobbyFromUser(spotifId: string) {
         return await this.http.get<Lobby>(this.endpoint + "/lobbies", { headers: this.header, params: { "userId": spotifId }}).toPromise();
     }
 
-    async doesLobbyExist(lobbyId: string) {
-
+    async createLobby(spotifId: string) {
+        return await this.http.post(this.endpoint + "/lobbies/create", { "leaderSpotifyId": spotifId }, { headers: this.header }).toPromise();
     }
 
     async joinLobby(spotifId: string, lobbyId: string) {

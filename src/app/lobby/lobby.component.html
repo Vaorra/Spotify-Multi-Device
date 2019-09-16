@@ -1,18 +1,19 @@
 <StackLayout *ngIf="spotifyId">
     <GridLayout rows="*" columns="5*,2*,2*" width="100%" height="60" class="header">
-        <Label row="0" col="0" class="h2" text="Lobby - {{ lobby ? lobby.id : 'None'}}" style="vertical-align: center"></Label>
+        <Label *ngIf="!lobby" row="0" col="0" class="h2" text="Create or join a lobby" style="vertical-align: center"></Label>
+        <Label *ngIf="lobby" row="0" col="0" class="h2" text="Lobby - {{ lobby.id }}" style="vertical-align: center"></Label>
         <Button *ngIf="!lobby" (tap)="onCreateLobby()" row="0" col="1" text="Create"></Button>
         <Button *ngIf="!lobby" (tap)="onJoinLobby()" row="0" col="2" text="Join"></Button>
         <Button *ngIf="lobby" (tap)="onLeaveLobby()" row="0" col="2" text="Leave"></Button>
     </GridLayout>
-    <ns-player *ngIf="lobby" [lobby]="lobby"></ns-player>
+    <ns-player *ngIf="lobby && lobby.leaderSpotifyId === spotifyId" [lobby]="lobby"></ns-player>
     <StackLayout *ngIf="lobby" class="seperator">
         <Label class="h3" text="Queue"></Label>
     </StackLayout>
     <ListView *ngIf="lobby" [items]="lobby.queuedSongs" class="list-group">
         <ng-template let-song="item" let-i="index" let-odd="odd" let-even="even">
-            <StackLayout orientation="horizontal" class="list-group-item">
-                <Image src="song.imageUrl" width="32" marginRight="10"></Image>
+            <StackLayout orientation="horizontal" class="list-group-item" style="padding:0;border-top-width:1px;border-top-color:black">
+                <Image src="song.imageUrl" width="48" height="48" marginRight="15"></Image>
                 <Label [text]="'Song ' + song.name + ' queued by User ' + song.queuerId"></Label>
             </StackLayout>
         </ng-template>
@@ -22,8 +23,9 @@
     </StackLayout>
     <ListView *ngIf="lobby" [items]="lobby.participantUsers" class="list-group">
         <ng-template let-user="item" let-i="index" let-odd="odd" let-even="even">
-            <StackLayout orientation="horizontal" class="list-group-item">
-                <Image src="user.spotifyProfilePictureUrl" width="32" marginRight="10"></Image>
+            <StackLayout orientation="horizontal" class="list-group-item" style="padding:0;border-top-width:1px;border-top-color:black">
+                <Image *ngIf="!user.spotifyProfilePictureUrl" src="res://blank_profile" width="48" height="48" marginRight="15"></Image>
+                <Image *ngIf="user.spotifyProfilePictureUrl" src="user.spotifyProfilePictureUrl" width="48" height="48" marginRight="15"></Image>
                 <Label [text]="'User ' + user.spotifyDisplayName"></Label>
             </StackLayout>
         </ng-template>

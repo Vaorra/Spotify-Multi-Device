@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from "@angular/core";
-import { Lobby } from "../lobby/lobby";
+import { Lobby, Song } from "../lobby/lobby";
 
 @Component({
     selector: "ns-player",
@@ -10,14 +10,13 @@ import { Lobby } from "../lobby/lobby";
 export class PlayerComponent implements OnInit {
     @Input() lobby: Lobby;
 
-    songName: string;
-    artistNames: string[];
+    song: Song;
 
     playerCurrentSeconds = 70;
     playerMaxSeconds = 300;
 
     ngOnInit() {
-        this.loadInfo();
+        this.initializeSong();
     }
 
     onPrevious() {
@@ -48,9 +47,7 @@ export class PlayerComponent implements OnInit {
         return seconds;
     }
 
-    loadInfo() {
-        let song = this.lobby.queuedSongs.find(song => song.spotifyId === this.lobby.currentSongId);
-        this.songName = song.name;
-        this.artistNames = song.artistNames;
+    initializeSong() {
+        this.song = this.lobby.queuedSongs.find(song => song.spotifyId === this.lobby.currentSongId);
     }
 }
