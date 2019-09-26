@@ -32,8 +32,6 @@ export class LoginComponent implements AfterViewInit {
                         this.ngZone.run(() => this.router.navigate(["home"]));
                     });
                 }
-
-                console.log("Loaded: " + data.url);
             }
             else {
                 console.log("Failed to load: " + data.url + " because of: " + data.error);

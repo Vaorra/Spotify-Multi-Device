@@ -15,7 +15,7 @@ export interface User {
 
 export interface Song {
     spotifyId: string,
-    queuerId: string,
+    queuer: User,
     name: string,
     artistNames: string[],
     duration: number //in seconds,

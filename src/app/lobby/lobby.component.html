@@ -5,8 +5,9 @@
         <Button *ngIf="!lobby" (tap)="onCreateLobby()" row="0" col="1" text="Create"></Button>
         <Button *ngIf="!lobby" (tap)="onJoinLobby()" row="0" col="2" text="Join"></Button>
         <Button *ngIf="lobby" (tap)="onLeaveLobby()" row="0" col="2" text="Leave"></Button>
+        <Button *ngIf="lobby && lobby.leaderSpotifyId === spotifyId" (tap)="onCloseLobby()" row="0" col="2" text="Close"></Button>
     </GridLayout>
-    <ns-player *ngIf="lobby && lobby.leaderSpotifyId === spotifyId" [lobby]="lobby"></ns-player>
+    <ns-player *ngIf="lobby && (lobby.leaderSpotifyId === spotifyId)" [lobby]="lobby"></ns-player>
     <StackLayout *ngIf="lobby" class="seperator">
         <Label class="h3" text="Queue"></Label>
     </StackLayout>
@@ -14,7 +15,7 @@
         <ng-template let-song="item" let-i="index" let-odd="odd" let-even="even">
             <StackLayout orientation="horizontal" class="list-group-item" style="padding:0;border-top-width:1px;border-top-color:black">
                 <Image src="song.imageUrl" width="48" height="48" marginRight="15"></Image>
-                <Label [text]="'Song ' + song.name + ' queued by User ' + song.queuerId"></Label>
+                <Label [text]="song.name + ' queued by ' + song.queuer.spotifyDisplayName"></Label>
             </StackLayout>
         </ng-template>
     </ListView>
@@ -26,7 +27,7 @@
             <StackLayout orientation="horizontal" class="list-group-item" style="padding:0;border-top-width:1px;border-top-color:black">
                 <Image *ngIf="!user.spotifyProfilePictureUrl" src="res://blank_profile" width="48" height="48" marginRight="15"></Image>
                 <Image *ngIf="user.spotifyProfilePictureUrl" src="user.spotifyProfilePictureUrl" width="48" height="48" marginRight="15"></Image>
-                <Label [text]="'User ' + user.spotifyDisplayName"></Label>
+                <Label [text]="user.spotifyDisplayName"></Label>
             </StackLayout>
         </ng-template>
     </ListView>

@@ -6,6 +6,7 @@ import { WebView, LoadEventData } from "tns-core-modules/ui/web-view";
 import { WebViewUtils } from "nativescript-webview-utils";
 import { AuthenticationService } from "../sites/authentication.service";
 import { PromptOptions, inputType, capitalizationType, PromptResult, prompt, alert } from "tns-core-modules/ui/dialogs/dialogs";
+import { async } from "rxjs/internal/scheduler/async";
 
 
 @Component({
@@ -25,17 +26,13 @@ export class LobbyComponent implements OnInit {
     async ngOnInit() {
         this.spotifyId = this.authenticationService.getUserSpotifyId();
 
-        if (this.spotifyId !== undefined) {
-            this.lobby = await this.lobbyService.getLobbyFromUser(this.spotifyId);
-            console.log(this.lobby);
-        }
-        console.log("Init with Spotify Id: " + this.spotifyId);
+        this.updateLobby();
     }
 
-    async onCreateLobby() {
-        console.log("CREATE");
-
-        await this.lobbyService.createLobby(this.spotifyId);
+    onCreateLobby() {
+        this.lobbyService.createLobby(this.spotifyId).then(async (lobbyId) => {
+            this.updateLobby();
+        });
     }
 
     onJoinLobby() {
@@ -49,21 +46,30 @@ export class LobbyComponent implements OnInit {
             capitalizationType: capitalizationType.none
         }
 
-        prompt(options).then((result: PromptResult) => {
+        prompt(options).then(async (result: PromptResult) => {
             if (result.result) {
                 let lobbyId = result.text;
 
                 if (/([0-9]|[a-f]){24}/.test(lobbyId)) {
-                    alert({
-                        title: "Success",
-                        message: "You have successfully joined the lobby: " + lobbyId,
-                        okButtonText: "OK"
+                    this.lobbyService.joinLobby(this.spotifyId, lobbyId).then(() => {
+                        this.updateLobby();
+                        alert({
+                            title: "Success",
+                            message: "You have successfully joined the lobby: " + lobbyId,
+                            okButtonText: "OK"
+                        });
+                    }, (error) => {
+                        alert({
+                            title: "Failure",
+                            message: "You could not join the lobby!",
+                            okButtonText: "OK"
+                        });
                     });
                 }
                 else {
                     alert({
                         title: "Failure",
-                        message: "This is no valid lobby ID",
+                        message: "This is no valid lobby ID!",
                         okButtonText: "OK"
                     });
                 }
@@ -72,6 +78,20 @@ export class LobbyComponent implements OnInit {
     }
 
     onLeaveLobby() {
-        console.log("LEAVE");
+        this.lobbyService.leaveLobby(this.spotifyId, this.lobby.id).then(async () => {
+            this.updateLobby();
+        });
+    }
+
+    onCloseLobby() {
+        this.lobbyService.closeLobby(this.lobby.id).then(async () => {
+            this.updateLobby();
+        });
+    }
+
+    async updateLobby() {
+        if (this.spotifyId !== undefined) {
+            this.lobby = await this.lobbyService.getLobbyFromUser(this.spotifyId);
+        }
     }
 }
