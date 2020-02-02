@@ -11,6 +11,7 @@ import { LobbyComponent } from "./lobby/lobby.component";
 import { FriendComponent } from "./friends/friends.component";
 import { PlayerComponent } from "./player/player.component";
 import { LoginComponent } from "./sites/login.component";
+import { SongSearchComponent } from "./sites/search/song.component";
 
 // Uncomment and add to NgModule imports if you need to use two-way binding
 // import { NativeScriptFormsModule } from "nativescript-angular/forms";
@@ -37,7 +38,8 @@ import { LoginComponent } from "./sites/login.component";
         FriendComponent,
         //Sites
         HomeComponent,
-        LoginComponent
+        LoginComponent,
+        SongSearchComponent
     ],
     providers: [],
     schemas: [

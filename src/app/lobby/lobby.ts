@@ -4,7 +4,8 @@ export interface Lobby {
     participantUsers: User[],
     currentSongId: string, //spotify Id
     currentPlayerPosition: number, //in seconds
-    queuedSongs: Song[]
+    queuedSongs: Song[],
+    version: number
 }
 
 export interface User {

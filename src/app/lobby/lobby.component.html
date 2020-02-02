@@ -2,9 +2,10 @@
     <GridLayout rows="*" columns="5*,2*,2*" width="100%" height="60" class="header">
         <Label *ngIf="!lobby" row="0" col="0" class="h2" text="Create or join a lobby" style="vertical-align: center"></Label>
         <Label *ngIf="lobby" row="0" col="0" class="h2" text="Lobby - {{ lobby.id }}" style="vertical-align: center"></Label>
+        <Button *ngIf="lobby" (tap)="onQueueSong()" row="0" col="1" text="Queue"></Button>>
         <Button *ngIf="!lobby" (tap)="onCreateLobby()" row="0" col="1" text="Create"></Button>
         <Button *ngIf="!lobby" (tap)="onJoinLobby()" row="0" col="2" text="Join"></Button>
-        <Button *ngIf="lobby" (tap)="onLeaveLobby()" row="0" col="2" text="Leave"></Button>
+        <Button *ngIf="lobby && lobby.leaderSpotifyId !== spotifyId" (tap)="onLeaveLobby()" row="0" col="2" text="Leave"></Button>
         <Button *ngIf="lobby && lobby.leaderSpotifyId === spotifyId" (tap)="onCloseLobby()" row="0" col="2" text="Close"></Button>
     </GridLayout>
     <ns-player *ngIf="lobby && (lobby.leaderSpotifyId === spotifyId)" [lobby]="lobby"></ns-player>
@@ -28,6 +29,7 @@
                 <Image *ngIf="!user.spotifyProfilePictureUrl" src="res://blank_profile" width="48" height="48" marginRight="15"></Image>
                 <Image *ngIf="user.spotifyProfilePictureUrl" src="user.spotifyProfilePictureUrl" width="48" height="48" marginRight="15"></Image>
                 <Label [text]="user.spotifyDisplayName"></Label>
+                <Image *ngIf="user.spotifyId === lobby.leaderSpotifyId" src="res://crown" width="32" height="32" marginLeft="10"></Image>
             </StackLayout>
         </ng-template>
     </ListView>

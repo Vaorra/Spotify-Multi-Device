@@ -16,7 +16,7 @@ export class AuthenticationService {
     constructor(private http: HttpClient) {
         //REMOVE THIS IN PRODUCTION
         //this.spotifyId = "colin8442";
-        //this.spotifyId = "ks5ey129m3sazez0xb4eo01kd";
+        this.spotifyId = "ks5ey129m3sazez0xb4eo01kd";
     }
 
     isLoggedIn() {

@@ -12,6 +12,7 @@ const routes: Routes = [
     { path: "home", component: HomeComponent },
     { path: "home/reload", component: HomeComponent },
     { path: "login", component: LoginComponent },
+    { path: "search/song", component: Song}
 ];
 
 @NgModule({
