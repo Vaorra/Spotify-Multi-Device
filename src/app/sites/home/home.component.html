@@ -1,0 +1,10 @@
+<app-navbar [spotifyId]="spotifyId"></app-navbar>
+<mat-tab-group *ngIf="spotifyId" mat-align-tabs="center">
+  <mat-tab label="Lobby">
+    <app-lobby></app-lobby>
+  </mat-tab>
+  <mat-tab label="Friends">
+    <app-friends></app-friends>
+  </mat-tab>
+</mat-tab-group>
+<h1 *ngIf="!spotifyId">Log in with your Spotify account!</h1>

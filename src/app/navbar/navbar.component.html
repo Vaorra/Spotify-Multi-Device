@@ -1,0 +1,8 @@
+<mat-toolbar style="justify-content: space-between;">
+  <a *ngIf="back" mat-icon-button>
+    <mat-icon aria-hidden="false" aria-label="Back">arrow_back</mat-icon>
+  </a>
+  <span>Spotify Multi Device</span>
+  <a *ngIf="!spotifyId" mat-button [href]="loginUrl">Log In</a>
+  <button *ngIf="spotifyId" mat-button (click)="onLogout()">Log Out</button>
+</mat-toolbar>

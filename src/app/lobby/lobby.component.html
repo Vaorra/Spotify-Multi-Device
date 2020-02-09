@@ -1,0 +1,19 @@
+<mat-grid-list cols="3" rowHeight="50px">
+  <mat-grid-tile colspan="3">
+    <h4 *ngIf="!lobby">Create or join a lobby</h4>
+    <h4 *ngIf="lobby">Lobby - {{ lobby.id }}</h4>
+  </mat-grid-tile>
+  <mat-grid-tile>
+    <button *ngIf="lobby" mat-stroked-button (click)="onQueueSong()">Queue</button>
+    <button *ngIf="!lobby" mat-stroked-button (click)="onCreateLobby()">Create</button>
+  </mat-grid-tile>
+  <mat-grid-tile>
+    <button *ngIf="!lobby" mat-stroked-button (click)="onJoinLobby()">Join</button>
+    <div *ngIf="lobby">
+      <button *ngIf="lobby.leaderSpotifyId !== spotifyId" mat-stroked-button (click)="onLeaveLobby()">Leave</button>
+      <button *ngIf="lobby.leaderSpotifyId === spotifyId" mat-stroked-button (click)="onCloseLobby()">Close</button>
+    </div>
+  </mat-grid-tile>
+</mat-grid-list>
+<mat-divider></mat-divider>
+<app-player *ngIf="lobby"></app-player>

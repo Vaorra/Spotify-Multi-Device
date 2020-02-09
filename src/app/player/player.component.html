@@ -1,0 +1,8 @@
+<mat-grid-list cols='4' rowHeight="50px">
+  <mat-grid-tile colspan='4'>
+    <h3 *ngIf="song">{{ song.name }} - {{ song.artistNames.toString() }}</h3>
+  </mat-grid-tile>
+  <mat-grid-tile colspan='4'>
+    <mat-slider [(value)]='playerCurrentSeconds' min='0' [max]='playerMaxSeconds'></mat-slider>
+  </mat-grid-tile>
+</mat-grid-list>
