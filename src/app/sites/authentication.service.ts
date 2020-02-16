@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { BehaviorSubject, Observable, of } from 'rxjs';
+import { BehaviorSubject, Observable, of, empty } from 'rxjs';
 import { User } from '../lobby/lobby';
+import { map, switchMap, tap, catchError } from 'rxjs/operators';
+import { ReturnStatement } from '@angular/compiler';
 
 @Injectable({
   providedIn: 'root'
@@ -16,11 +18,17 @@ export class AuthenticationService {
   });
 
   constructor(private http: HttpClient) {
-    this.spotifyIdSubject = new BehaviorSubject(JSON.parse(localStorage.getItem('currentUser')));
+    this.spotifyIdSubject = new BehaviorSubject(undefined);
     this.spotifyId = this.spotifyIdSubject.asObservable();
+
+    const state = localStorage.getItem('state');
+
+    if (state) {
+      this.authenticate(state);
+    }
     // REMOVE THIS IN PRODUCTION
-    // this.spotifyId = "colin8442";
-    // this.spotifyId = 'ks5ey129m3sazez0xb4eo01kd';
+    // colin8442;
+    // ks5ey129m3sazez0xb4eo01kd
   }
 
   getSpotifyId(): string {
@@ -31,15 +39,19 @@ export class AuthenticationService {
     return this.endpoint + '/login';
   }
 
-  login(spotifyId: string) {
-    localStorage.setItem('currentUser', JSON.stringify(spotifyId));
-    this.spotifyIdSubject.next(spotifyId);
+  authenticate(state: string, code?: string) {
+    this.http.post<{ spotifyId: string }>(this.endpoint + '/authenticate/', { state, code }, {
+      headers: this.header
+    }).subscribe((result) => {
+      if (result.spotifyId) {
+        this.spotifyIdSubject.next(result.spotifyId);
+        localStorage.setItem('state', state);
+      }
+    });
   }
 
   logout() {
-    this.http.post(this.endpoint + '/logout/' + this.spotifyIdSubject.value, { headers: this.header }).subscribe(() => {
-      localStorage.removeItem('currentUser');
-      this.spotifyIdSubject.next(undefined);
-    });
+    localStorage.removeItem('state');
+    this.spotifyIdSubject.next(undefined);
   }
 }

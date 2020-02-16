@@ -14,8 +14,8 @@ export class HomeComponent implements OnInit {
 
   constructor(private route: ActivatedRoute, private authenticationService: AuthenticationService) {
     this.route.queryParams.subscribe((params) => {
-      if (params['user']) {
-        this.authenticationService.login(params['user']);
+      if (params['code'] && params['state']) {
+        this.authenticationService.authenticate(params['state'], params['code']);
       }
     });
 

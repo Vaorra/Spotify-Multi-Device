@@ -7,7 +7,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class TestComponent implements OnInit {
 
-  testVariable: number = 1;
+  testVariable = 1;
 
   constructor() { }
 

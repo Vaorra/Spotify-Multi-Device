@@ -28,7 +28,6 @@ import { TestComponent } from './test/test.component';
 
 const appRoutes: Routes = [
   { path: '', component: HomeComponent, pathMatch: 'full'},
-  { path: 'home/reload', component: HomeComponent },
   { path: 'search/song', component: SearchSongComponent },
   { path: 'test', component: TestComponent }
 ];

@@ -15,15 +15,9 @@ export class LobbyComponent implements OnInit {
 
   updaterId: number;
 
-  constructor(private lobbyService: LobbyService, private router: Router, private authenticationService: AuthenticationService) {
-    this.authenticationService.spotifyId.subscribe((spotifyId) => {
-      this.spotifyId = spotifyId;
-
-      if (this.spotifyId) {
-        this.lobbyService.getLobbyFromUser(this.spotifyId).subscribe((lobby) => {
-          this.lobby = lobby;
-        });
-      }
+  constructor(private lobbyService: LobbyService, private router: Router) {
+    this.lobbyService.lobby.subscribe((lobby) => {
+      this.lobby = lobby;
     });
   }
 
@@ -35,9 +29,7 @@ export class LobbyComponent implements OnInit {
   }
 
   onCreateLobby() {
-    this.lobbyService.createLobby(this.spotifyId).subscribe((lobby) => {
-      this.lobby = lobby;
-    });
+    this.lobbyService.createLobby(this.spotifyId).subscribe();
   }
 
   onJoinLobby() {
@@ -83,14 +75,10 @@ export class LobbyComponent implements OnInit {
   }
 
   onLeaveLobby() {
-    this.lobbyService.leaveLobby(this.spotifyId, this.lobby.id).subscribe(() => {
-      this.lobby = null;
-    });
+    this.lobbyService.leaveLobby(this.spotifyId, this.lobby.id).subscribe();
   }
 
   onCloseLobby() {
-    this.lobbyService.closeLobby(this.lobby.id).subscribe(() => {
-      this.lobby = null;
-    });
+    this.lobbyService.closeLobby(this.lobby.id).subscribe();
   }
 }

@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Lobby } from './lobby';
 import { map, switchMap, catchError } from 'rxjs/operators';
-import { of, Observable } from 'rxjs';
+import { of, Observable, BehaviorSubject, timer, interval } from 'rxjs';
+import { AuthenticationService } from '../sites/authentication.service';
 
 @Injectable({
   providedIn: 'root'
@@ -15,10 +16,24 @@ export class LobbyService {
     'Content-Type': 'application/json'
   });
 
-  constructor(private http: HttpClient) {
+  private lobbySubject: BehaviorSubject<Lobby>;
+  public lobby: Observable<Lobby>;
+  public updater: Observable<void>;
+
+  constructor(private http: HttpClient, private authenticationService: AuthenticationService) {
+    this.lobbySubject = new BehaviorSubject(null);
+    this.lobby = this.lobbySubject.asObservable();
+
+    this.updater = interval(10000).pipe(
+      map(() => {
+        this.getLobbyFromUser(authenticationService.getSpotifyId()).subscribe((lobbyId) => {
+          this.setLobby(lobbyId);
+        });
+      })
+    );
   }
 
-  getLobbyFromUser(spotifId: string) {
+  private getLobbyFromUser(spotifId: string) {
     return this.http.get<{ lobbyId: string }>(this.endpoint + '/search', {
       params: { participantId: spotifId },
       headers: this.header
@@ -29,14 +44,22 @@ export class LobbyService {
         }
 
         return result.lobbyId;
-      }), switchMap((lobbyId) => {
-        if (!lobbyId) {
-          return of<null>(null);
-        }
-
-        return this.http.get<Lobby>(this.endpoint + '/get/' + lobbyId);
       })
     );
+  }
+
+  private setLobby(lobbyId: string) {
+    if (lobbyId) {
+      this.http.get<Lobby>(this.endpoint + '/get/' + lobbyId, {
+        headers: this.header
+      }).pipe(
+        map((lobby) => {
+          this.lobbySubject.next(lobby);
+        })
+      ).subscribe();
+    } else {
+      this.lobbySubject.next(null);
+    }
   }
 
   createLobby(spotifId: string) {
@@ -44,8 +67,8 @@ export class LobbyService {
       params: { leaderId: spotifId },
       headers: this.header
     }).pipe(
-      switchMap((result) => {
-        return this.http.get<Lobby>(this.endpoint + '/get/' + result.lobbyId);
+      map((result) => {
+        this.setLobby(result.lobbyId);
       })
     );
   }
@@ -54,20 +77,32 @@ export class LobbyService {
     return this.http.patch<any>(this.endpoint + '/join', {}, {
       params: { participantId: spotifId, lobbyId},
       headers: this.header
-    });
+    }).pipe(
+      map((result) => {
+        this.setLobby(lobbyId);
+      })
+    );
   }
 
   leaveLobby(spotifId: string, lobbyId: string) {
     return this.http.patch<any>(this.endpoint + '/leave', {}, {
       params: { participantId: spotifId, lobbyId },
       headers: this.header
-    });
+    }).pipe(
+      map((result) => {
+        this.setLobby(null);
+      })
+    );
   }
 
   closeLobby(lobbyId: string) {
     return this.http.delete<any>(this.endpoint + '/close', {
       params: { lobbyId },
       headers: this.header
-    });
+    }).pipe(
+      map((result) => {
+        this.setLobby(null);
+      })
+    );
   }
 }
