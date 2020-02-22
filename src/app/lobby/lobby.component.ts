@@ -3,6 +3,9 @@ import { Lobby } from './lobby';
 import { LobbyService } from './lobby.service';
 import { Router } from '@angular/router';
 import { AuthenticationService } from '../sites/authentication.service';
+import { MatDialog } from '@angular/material/dialog';
+import { JoinComponent } from './join/join.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-lobby',
@@ -13,10 +16,13 @@ export class LobbyComponent implements OnInit {
   spotifyId: string;
   lobby: Lobby;
 
-  updaterId: number;
+  constructor(private router: Router, private lobbyService: LobbyService, private authenticationService: AuthenticationService,
+              public dialog: MatDialog, private snackBar: MatSnackBar) {
+    this.authenticationService.onSpotifyIdChange.subscribe((newSpotifyId) => {
+      this.spotifyId = newSpotifyId;
+    });
 
-  constructor(private lobbyService: LobbyService, private router: Router) {
-    this.lobbyService.lobby.subscribe((lobby) => {
+    this.lobbyService.onLobbyChange.subscribe((lobby) => {
       this.lobby = lobby;
     });
   }
@@ -33,45 +39,23 @@ export class LobbyComponent implements OnInit {
   }
 
   onJoinLobby() {
-    /*let options: PromptOptions = {
-      title: "Join Lobby",
-      message: "Enter the lobby's ID",
-      okButtonText: "Join",
-      cancelButtonText: "Cancle",
-      cancelable: true,
-      inputType: inputType.text,
-      capitalizationType: capitalizationType.none
-    }
+    let joinDialog = this.dialog.open(JoinComponent, {
+      width: '250px'
+    });
 
-    prompt(options).then(async (result: PromptResult) => {
-      if (result.result) {
-        let lobbyId = result.text;
-
-        if (/([0-9]|[a-f]){24}/.test(lobbyId)) {
-          this.lobbyService.joinLobby(this.spotifyId, lobbyId).then(() => {
-            this.updateLobby();
-            alert({
-              title: "Success",
-              message: "You have successfully joined the lobby: " + lobbyId,
-              okButtonText: "OK"
+    joinDialog.afterClosed().subscribe((result) => {
+      if (result) {
+        this.lobbyService.validateLobbyId(result).subscribe((valid) => {
+          if (valid) {
+            this.lobbyService.joinLobby(this.spotifyId, result).subscribe(() => {
+              this.snackBar.open('Successfully joined the lobby!', 'Dismiss');
             });
-          }, (error) => {
-            alert({
-              title: "Failure",
-              message: "You could not join the lobby!",
-              okButtonText: "OK"
-            });
-          });
-        }
-        else {
-          alert({
-            title: "Failure",
-            message: "This is no valid lobby ID!",
-            okButtonText: "OK"
-          });
-        }
+          } else {
+            this.snackBar.open('Invalid lobby ID!', 'Dismiss');
+          }
+        });
       }
-    });*/
+    });
   }
 
   onLeaveLobby() {

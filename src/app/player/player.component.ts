@@ -16,7 +16,6 @@ export class PlayerComponent implements OnInit {
   playerMaxSeconds = 300;
 
   ngOnInit() {
-      this.initializeSong();
   }
 
   onPrevious() {
@@ -45,9 +44,5 @@ export class PlayerComponent implements OnInit {
           return '0' + seconds;
       }
       return seconds;
-  }
-
-  initializeSong() {
-      this.song = this.lobby.queuedSongs.find(song => song.spotifyId === this.lobby.currentSongId);
   }
 }

@@ -21,13 +21,22 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatInputModule } from '@angular/material/input';
 
 import { FriendsComponent } from './friends/friends.component';
 import { HttpClientModule } from '@angular/common/http';
 import { TestComponent } from './test/test.component';
+import { LoginComponent } from './sites/login/login.component';
+import { JoinComponent } from './lobby/join/join.component';
+import { FormsModule } from '@angular/forms';
 
 const appRoutes: Routes = [
   { path: '', component: HomeComponent, pathMatch: 'full'},
+  { path: 'home', component: HomeComponent },
+  { path: 'login', component: LoginComponent },
   { path: 'search/song', component: SearchSongComponent },
   { path: 'test', component: TestComponent }
 ];
@@ -42,9 +51,11 @@ const appRoutes: Routes = [
     FriendsComponent,
     // Sites
     HomeComponent,
+    LoginComponent,
     SearchSongComponent,
     FriendsComponent,
-    TestComponent
+    TestComponent,
+    JoinComponent
   ],
   imports: [
     BrowserModule,
@@ -52,9 +63,10 @@ const appRoutes: Routes = [
     BrowserAnimationsModule,
     RouterModule.forRoot(
       appRoutes,
-      { enableTracing: true } // <-- debugging purposes only
+      { enableTracing: false } // <-- debugging purposes only
     ),
     NgbModule,
+    FormsModule,
     MatToolbarModule,
     MatMenuModule,
     MatListModule,
@@ -64,7 +76,14 @@ const appRoutes: Routes = [
     MatGridListModule,
     MatDividerModule,
     MatSliderModule,
-    MatProgressBarModule
+    MatProgressBarModule,
+    MatDialogModule,
+    MatFormFieldModule,
+    MatSnackBarModule,
+    MatInputModule
+  ],
+  entryComponents: [
+    JoinComponent
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -10,21 +10,21 @@ import { ReturnStatement } from '@angular/compiler';
 })
 export class AuthenticationService {
   endpoint = 'https://api.smd.neture.dev';
-  private spotifyIdSubject: BehaviorSubject<string>;
-  public spotifyId: Observable<string>;
+  private spotifyId: BehaviorSubject<string>;
+  public onSpotifyIdChange: Observable<string>;
 
   header: HttpHeaders = new HttpHeaders({
     'Content-Type': 'application/json'
   });
 
   constructor(private http: HttpClient) {
-    this.spotifyIdSubject = new BehaviorSubject(undefined);
-    this.spotifyId = this.spotifyIdSubject.asObservable();
+    this.spotifyId = new BehaviorSubject(undefined);
+    this.onSpotifyIdChange = this.spotifyId.asObservable();
 
     const state = localStorage.getItem('state');
 
     if (state) {
-      this.authenticate(state);
+      this.authenticate(state).subscribe();
     }
     // REMOVE THIS IN PRODUCTION
     // colin8442;
@@ -32,26 +32,32 @@ export class AuthenticationService {
   }
 
   getSpotifyId(): string {
-    return this.spotifyIdSubject.value;
+    return this.spotifyId.value;
   }
 
   getLoginUrl(): string {
     return this.endpoint + '/login';
   }
 
+  isLoggedIn(): boolean {
+    return this.spotifyId.value ? true : false;
+  }
+
   authenticate(state: string, code?: string) {
-    this.http.post<{ spotifyId: string }>(this.endpoint + '/authenticate/', { state, code }, {
+    return this.http.post<{ authorized: boolean, spotifyId: string }>(this.endpoint + '/authenticate/', { state, code }, {
       headers: this.header
-    }).subscribe((result) => {
-      if (result.spotifyId) {
-        this.spotifyIdSubject.next(result.spotifyId);
-        localStorage.setItem('state', state);
-      }
-    });
+    }).pipe(
+      map((result) => {
+        if (result.authorized && result.spotifyId) {
+          this.spotifyId.next(result.spotifyId);
+          localStorage.setItem('state', state);
+        }
+      })
+    );
   }
 
   logout() {
     localStorage.removeItem('state');
-    this.spotifyIdSubject.next(undefined);
+    this.spotifyId.next(undefined);
   }
 }

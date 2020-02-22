@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Lobby } from './lobby';
 import { map, switchMap, catchError } from 'rxjs/operators';
-import { of, Observable, BehaviorSubject, timer, interval } from 'rxjs';
+import { of, Observable, BehaviorSubject, timer, interval, Subject, Subscribable, Subscription } from 'rxjs';
 import { AuthenticationService } from '../sites/authentication.service';
 
 @Injectable({
@@ -16,19 +16,51 @@ export class LobbyService {
     'Content-Type': 'application/json'
   });
 
-  private lobbySubject: BehaviorSubject<Lobby>;
-  public lobby: Observable<Lobby>;
-  public updater: Observable<void>;
+  private lobby: BehaviorSubject<Lobby>;
+  public onLobbyChange: Observable<Lobby>;
+
+  public onUpdate: Observable<void>;
+  private updater: Subscription;
 
   constructor(private http: HttpClient, private authenticationService: AuthenticationService) {
-    this.lobbySubject = new BehaviorSubject(null);
-    this.lobby = this.lobbySubject.asObservable();
+    this.lobby = new BehaviorSubject(null);
+    this.onLobbyChange = this.lobby.asObservable();
 
-    this.updater = interval(10000).pipe(
+    // Lobby update interval (every 10 seconds)
+    this.onUpdate = interval(10000).pipe(
       map(() => {
         this.getLobbyFromUser(authenticationService.getSpotifyId()).subscribe((lobbyId) => {
-          this.setLobby(lobbyId);
+          if (lobbyId) {
+            this.getLobbyVersion(lobbyId).subscribe((version) => {
+              if (!this.lobby.value || version !== this.lobby.value.version) {
+                this.setLobby(lobbyId);
+              }
+            });
+          }
         });
+      })
+    );
+
+    // Start updater on Login
+    this.authenticationService.onSpotifyIdChange.subscribe((newSpotifyId) => {
+      if (newSpotifyId) {
+        this.updater = this.onUpdate.subscribe();
+      } else {
+        this.updater.unsubscribe();
+      }
+    });
+  }
+
+  private getLobbyVersion(lobbyId: string) {
+    return this.http.get<{ version: number }>(this.endpoint + '/version/' + lobbyId, {
+      headers: this.header
+    }).pipe(
+      map((result) => {
+        if (result) {
+          return result.version;
+        }
+
+        return null;
       })
     );
   }
@@ -54,17 +86,27 @@ export class LobbyService {
         headers: this.header
       }).pipe(
         map((lobby) => {
-          this.lobbySubject.next(lobby);
+          this.lobby.next(lobby);
         })
       ).subscribe();
     } else {
-      this.lobbySubject.next(null);
+      this.lobby.next(undefined);
     }
   }
 
+  validateLobbyId(lobbyId: string) {
+    return this.http.get<any>(this.endpoint + '/search', {
+      headers: this.header,
+      params: { lobbyId }
+    }).pipe(
+      map((result) => {
+        return result ? true : false;
+      })
+    );
+  }
+
   createLobby(spotifId: string) {
-    return this.http.post<{ lobbyId: string }>(this.endpoint + '/create', {}, {
-      params: { leaderId: spotifId },
+    return this.http.post<{ lobbyId: string }>(this.endpoint + '/create', { leaderId: spotifId }, {
       headers: this.header
     }).pipe(
       map((result) => {
@@ -74,8 +116,7 @@ export class LobbyService {
   }
 
   joinLobby(spotifId: string, lobbyId: string) {
-    return this.http.patch<any>(this.endpoint + '/join', {}, {
-      params: { participantId: spotifId, lobbyId},
+    return this.http.patch<any>(this.endpoint + '/join', { participantId: spotifId, lobbyId }, {
       headers: this.header
     }).pipe(
       map((result) => {
@@ -85,8 +126,7 @@ export class LobbyService {
   }
 
   leaveLobby(spotifId: string, lobbyId: string) {
-    return this.http.patch<any>(this.endpoint + '/leave', {}, {
-      params: { participantId: spotifId, lobbyId },
+    return this.http.patch<any>(this.endpoint + '/leave', { participantId: spotifId, lobbyId }, {
       headers: this.header
     }).pipe(
       map((result) => {
@@ -96,8 +136,7 @@ export class LobbyService {
   }
 
   closeLobby(lobbyId: string) {
-    return this.http.delete<any>(this.endpoint + '/close', {
-      params: { lobbyId },
+    return this.http.delete<any>(this.endpoint + '/close' + lobbyId, {
       headers: this.header
     }).pipe(
       map((result) => {
