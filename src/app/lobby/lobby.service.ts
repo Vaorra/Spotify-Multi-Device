@@ -27,7 +27,7 @@ export class LobbyService {
     this.onLobbyChange = this.lobby.asObservable();
 
     // Lobby update interval (every 10 seconds)
-    this.onUpdate = interval(10000).pipe(
+    this.onUpdate = timer(0, 10000).pipe(
       map(() => {
         this.getLobbyFromUser(authenticationService.getSpotifyId()).subscribe((lobbyId) => {
           if (lobbyId) {
