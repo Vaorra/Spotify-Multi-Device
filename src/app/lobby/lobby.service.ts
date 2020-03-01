@@ -10,7 +10,7 @@ import { AuthenticationService } from '../sites/authentication.service';
 })
 export class LobbyService {
 
-  endpoint = 'https://api.smd.neture.dev/lobbies';
+  endpoint = 'https://api.smd.intnet.ch/lobbies';
 
   header: HttpHeaders = new HttpHeaders({
     'Content-Type': 'application/json'
@@ -36,6 +36,9 @@ export class LobbyService {
                 this.setLobby(lobbyId);
               }
             });
+          }
+          else {
+            this.setLobby(null);
           }
         });
       })
@@ -90,7 +93,7 @@ export class LobbyService {
         })
       ).subscribe();
     } else {
-      this.lobby.next(undefined);
+      this.lobby.next(null);
     }
   }
 
@@ -136,7 +139,7 @@ export class LobbyService {
   }
 
   closeLobby(lobbyId: string) {
-    return this.http.delete<any>(this.endpoint + '/close' + lobbyId, {
+    return this.http.delete<any>(this.endpoint + '/close/' + lobbyId, {
       headers: this.header
     }).pipe(
       map((result) => {

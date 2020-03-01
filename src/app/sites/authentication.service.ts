@@ -9,7 +9,7 @@ import { ReturnStatement } from '@angular/compiler';
   providedIn: 'root'
 })
 export class AuthenticationService {
-  endpoint = 'https://api.smd.neture.dev';
+  endpoint = 'https://api.smd.intnet.ch';
   private spotifyId: BehaviorSubject<string>;
   public onSpotifyIdChange: Observable<string>;
 
