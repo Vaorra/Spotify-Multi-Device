@@ -11,6 +11,7 @@ import { AuthenticationService } from '../sites/authentication.service';
 export class LobbyService {
 
   endpoint = 'https://api.smd.intnet.ch/lobbies';
+  refreshRate = 1000;
 
   header: HttpHeaders = new HttpHeaders({
     'Content-Type': 'application/json'
@@ -27,17 +28,16 @@ export class LobbyService {
     this.onLobbyChange = this.lobby.asObservable();
 
     // Lobby update interval (every 10 seconds)
-    this.onUpdate = timer(0, 10000).pipe(
+    this.onUpdate = timer(0, this.refreshRate).pipe(
       map(() => {
         this.getLobbyFromUser(authenticationService.getSpotifyId()).subscribe((lobbyId) => {
           if (lobbyId) {
             this.getLobbyVersion(lobbyId).subscribe((version) => {
-              if (!this.lobby.value || version !== this.lobby.value.version) {
+              if (!this.lobby.value || version > this.lobby.value.version) {
                 this.setLobby(lobbyId);
               }
             });
-          }
-          else {
+          } else {
             this.setLobby(null);
           }
         });
@@ -52,6 +52,10 @@ export class LobbyService {
         this.updater.unsubscribe();
       }
     });
+  }
+
+  getLobby() {
+    return this.lobby.value;
   }
 
   private getLobbyVersion(lobbyId: string) {

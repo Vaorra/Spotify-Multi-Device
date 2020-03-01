@@ -2,8 +2,9 @@ export interface Lobby {
   id: string; // 12-byte Id
   leaderSpotifyId: string;
   participantUsers: User[];
-  currentSongId: string; // spotify Id
+  currentSongIndex: number;
   currentPlayerPosition: number; // in seconds
+  isSongPlaying: boolean;
   queuedSongs: Song[];
   version: number;
 }

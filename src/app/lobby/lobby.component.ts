@@ -16,6 +16,8 @@ export class LobbyComponent implements OnInit {
   spotifyId: string;
   lobby: Lobby;
 
+  defaultProfilePicture = 'https://www.eguardtech.com/wp-content/uploads/2018/08/Network-Profile.png';
+
   constructor(private router: Router, private lobbyService: LobbyService, private authenticationService: AuthenticationService,
               public dialog: MatDialog, private snackBar: MatSnackBar) {
     this.authenticationService.onSpotifyIdChange.subscribe((newSpotifyId) => {

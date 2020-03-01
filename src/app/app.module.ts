@@ -25,6 +25,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatInputModule } from '@angular/material/input';
+import { MatCardModule } from '@angular/material/card';
 
 import { FriendsComponent } from './friends/friends.component';
 import { HttpClientModule } from '@angular/common/http';
@@ -80,7 +81,8 @@ const appRoutes: Routes = [
     MatDialogModule,
     MatFormFieldModule,
     MatSnackBarModule,
-    MatInputModule
+    MatInputModule,
+    MatCardModule
   ],
   entryComponents: [
     JoinComponent
