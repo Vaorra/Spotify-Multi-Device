@@ -1,11 +1,10 @@
 export interface Lobby {
-  id: string; // 12-byte Id
+  id: string; //12-byte Id
   leaderSpotifyId: string;
   participantUsers: User[];
   currentSongIndex: number;
-  currentPlayerPosition: number; // in seconds
-  isSongPlaying: boolean;
   queuedSongs: Song[];
+  playerId: string;
   version: number;
 }
 
@@ -20,6 +19,6 @@ export interface Song {
   queuer: User;
   name: string;
   artistNames: string[];
-  duration: number; // in seconds,
+  duration: number; //in ms
   imageUrl: string;
 }

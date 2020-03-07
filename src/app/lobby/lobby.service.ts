@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Lobby } from './lobby';
-import { map, switchMap, catchError } from 'rxjs/operators';
-import { of, Observable, BehaviorSubject, timer, interval, Subject, Subscribable, Subscription } from 'rxjs';
+import { Lobby } from './lobby.model';
+import { map } from 'rxjs/operators';
+import { Observable, BehaviorSubject, timer, Subscription } from 'rxjs';
 import { AuthenticationService } from '../sites/authentication.service';
 
 @Injectable({
@@ -126,7 +126,7 @@ export class LobbyService {
     return this.http.patch<any>(this.endpoint + '/join', { participantId: spotifId, lobbyId }, {
       headers: this.header
     }).pipe(
-      map((result) => {
+      map(() => {
         this.setLobby(lobbyId);
       })
     );
@@ -136,7 +136,7 @@ export class LobbyService {
     return this.http.patch<any>(this.endpoint + '/leave', { participantId: spotifId, lobbyId }, {
       headers: this.header
     }).pipe(
-      map((result) => {
+      map(() => {
         this.setLobby(null);
       })
     );
@@ -146,7 +146,7 @@ export class LobbyService {
     return this.http.delete<any>(this.endpoint + '/close/' + lobbyId, {
       headers: this.header
     }).pipe(
-      map((result) => {
+      map(() => {
         this.setLobby(null);
       })
     );

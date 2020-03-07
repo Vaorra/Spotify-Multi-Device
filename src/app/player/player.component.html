@@ -1,22 +1,22 @@
-<mat-card>
-  <mat-card-header *ngIf="song">
-    <img mat-card-avatar [src]="song.imageUrl" alt="...">
-    <mat-card-title>{{ song.name }}</mat-card-title>
-    <mat-card-subtitle>{{ song.artistNames.join(", ") }}</mat-card-subtitle>
+<mat-card *ngIf="player">
+  <mat-card-header *ngIf="currentSong">
+    <img mat-card-avatar [src]="currentSong.imageUrl" alt="...">
+    <mat-card-title>{{ currentSong.name }}</mat-card-title>
+    <mat-card-subtitle>{{ currentSong.artistNames.join(", ") }}</mat-card-subtitle>
   </mat-card-header>
   <mat-card-content>
     <mat-grid-list cols='3' rowHeight="50px">
       <mat-grid-tile colspan='3'>
         <span>{{ playerCurrentTimeText }}</span>
-        <mat-slider [(ngModel)]='playerCurrentSeconds' (change)="onJump()" min='0' [max]='song ? song.duration : 0'></mat-slider>
+        <mat-slider [(ngModel)]='player.position' (change)="onJump()" min='0' [max]='currentSong ? currentSong.duration : 0'></mat-slider>
         <span>{{ playerMaxTimeText }}</span>
       </mat-grid-tile>
       <mat-grid-tile>
         <button mat-stroked-button (click)="onPrevious()">Previous</button>
       </mat-grid-tile>
       <mat-grid-tile>
-        <button *ngIf="lobby.isSongPlaying" mat-stroked-button (click)="onPause()">Pause</button>
-        <button *ngIf="!lobby.isSongPlaying" mat-stroked-button (click)="onResume()">Resume</button>
+        <button *ngIf="player.isSongPlaying" mat-stroked-button (click)="onPause()">Pause</button>
+        <button *ngIf="!player.isSongPlaying" mat-stroked-button (click)="onResume()">Resume</button>
       </mat-grid-tile>
       <mat-grid-tile>
         <button mat-stroked-button (click)="onNext()">Next</button>

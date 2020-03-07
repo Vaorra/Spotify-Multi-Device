@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Lobby } from './lobby';
+import { Lobby } from './lobby.model';
 import { LobbyService } from './lobby.service';
 import { Router } from '@angular/router';
 import { AuthenticationService } from '../sites/authentication.service';

@@ -1,9 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { BehaviorSubject, Observable, of, empty } from 'rxjs';
-import { User } from '../lobby/lobby';
-import { map, switchMap, tap, catchError } from 'rxjs/operators';
-import { ReturnStatement } from '@angular/compiler';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'

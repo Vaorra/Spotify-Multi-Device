@@ -1,7 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Lobby, Song } from '../lobby/lobby';
+import { Lobby, Song } from '../lobby/lobby.model';
 import { LobbyService } from '../lobby/lobby.service';
 import { PlayerService } from './player.service';
+import { Player } from './player.model';
 
 @Component({
   selector: 'app-player',
@@ -11,23 +12,25 @@ import { PlayerService } from './player.service';
 
 export class PlayerComponent implements OnInit {
 
-  lobby: Lobby;
-  song: Song;
+  player: Player;
+  currentSong: Song;
 
-  playerCurrentSeconds = 0;
+  currentPosition: number; // in ms
 
   playerCurrentTimeText = '0:00';
   playerMaxTimeText = '0:00';
 
-  constructor(private lobbyService: LobbyService, private playerService: PlayerService) {
-    lobbyService.onLobbyChange.subscribe((lobby) => {
-      this.lobby = lobby;
-      if (lobby) {
-        this.song = lobby.queuedSongs[lobby.currentSongIndex];
-        this.playerCurrentSeconds = lobby.currentPlayerPosition;
+  constructor(private playerService: PlayerService) {
+    playerService.onPlayerChange.subscribe((player) => {
+      if (player) {
+        this.player = player;
+        if (this.player.queue.length > 0) {
+          this.currentSong = this.player.queue[this.player.queuePosition];
+          this.currentPosition = this.player.position;
 
-        this.playerCurrentTimeText = this.getCurrentTime();
-        this.playerMaxTimeText = this.getMaxTime();
+          this.playerCurrentTimeText = this.getCurrentTime();
+          this.playerMaxTimeText = this.getMaxTime();
+        }
       }
     });
   }
@@ -36,54 +39,39 @@ export class PlayerComponent implements OnInit {
   }
 
   onPrevious() {
-    this.playerService.previous(this.lobby.id).subscribe((songId) => {
-      this.song = this.lobby.queuedSongs.find((song) => {
-        return song.spotifyId === songId;
-      });
-    });
-    console.log('PREVIOUS');
+    this.playerService.previous(this.player.id).subscribe();
   }
 
   onNext() {
-    this.playerService.next(this.lobby.id).subscribe((songId) => {
-      this.song = this.lobby.queuedSongs.find((song) => {
-        return song.spotifyId === songId;
-      });
-    });
-    console.log('NEXT');
+    this.playerService.next(this.player.id).subscribe();
   }
 
   onPause() {
-    this.lobby.isSongPlaying = false;
-    this.playerService.pause(this.lobby.id).subscribe();
-    console.log('PAUSE');
+    this.playerService.pause(this.player.id).subscribe();
   }
 
   onResume() {
-    this.lobby.isSongPlaying = true;
-    this.playerService.resume(this.lobby.id).subscribe();
-    console.log('RESUME');
+    this.playerService.resume(this.player.id).subscribe();
   }
 
   onJump() {
-    this.playerService.jump(this.lobby.id, this.playerCurrentSeconds).subscribe();
-    console.log('JUMP ' + this.playerCurrentSeconds);
+    this.playerService.jump(this.player.id, this.currentPosition).subscribe();
   }
 
   private getCurrentTime() {
-    return this.getMinutes(this.playerCurrentSeconds) + ':' + this.getSeconds(this.playerCurrentSeconds);
+    return this.getMinutes(this.currentPosition) + ':' + this.getSeconds(this.currentPosition);
   }
 
   private getMaxTime() {
-    return this.getMinutes(this.song.duration) + ':' + this.getSeconds(this.song.duration);
+    return this.getMinutes(this.currentSong.duration) + ':' + this.getSeconds(this.currentSong.duration);
   }
 
-  private getMinutes(seconds: number) {
-    return Math.floor(seconds / 60).toFixed();
+  private getMinutes(ms: number) {
+    return Math.floor(ms / 60000).toFixed();
   }
 
-  private getSeconds(seconds: number) {
-    let secondsLeft = seconds % 60;
+  private getSeconds(ms: number) {
+    let secondsLeft = ms % 60000 / 1000;
 
     if (secondsLeft < 10) {
       return '0' + secondsLeft.toFixed();
