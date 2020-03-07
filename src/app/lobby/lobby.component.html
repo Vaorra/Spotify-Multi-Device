@@ -38,8 +38,8 @@
 <mat-toolbar>
   <h4>Queue</h4>
 </mat-toolbar>
-<mat-list *ngIf="lobby && lobby.queuedSongs">
-  <mat-list-item *ngFor="let song of lobby.queuedSongs.slice(lobby.currentSongIndex)">
+<mat-list *ngIf="lobby && player.queue">
+  <mat-list-item *ngFor="let song of player.queue.slice(lobby.currentSongIndex + 1)">
     <img matListAvatar [src]="song.imageUrl" alt="...">
     <h4 mat-line>{{ song.name }}</h4>
     <p mat-line>{{ song.artistNames.join(", ") }}</p>

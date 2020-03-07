@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { tap, map } from 'rxjs/operators';
 import { Player } from './player.model';
@@ -27,14 +27,6 @@ export class PlayerService {
     this.player = new BehaviorSubject(null);
     this.onPlayerChange = this.player.asObservable();
 
-    this.lobbyService.onLobbyChange.subscribe((lobby) => {
-      this.http.get<Player>(this.endpoint + '/get/' + lobby.playerId, {
-        headers: this.header
-      }).subscribe((player) => {
-        this.player.next(player);
-      });
-    });
-
     // Player update interval
     this.onUpdate = timer(0, this.refreshRate).pipe(
       map(() => {
@@ -48,7 +40,6 @@ export class PlayerService {
       })
     );
 
-    // Start updater on Login
     this.lobbyService.onLobbyChange.subscribe((newLobby) => {
       if (newLobby) {
         this.updater = this.onUpdate.subscribe();

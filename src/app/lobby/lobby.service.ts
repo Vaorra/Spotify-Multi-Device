@@ -4,6 +4,7 @@ import { Lobby } from './lobby.model';
 import { map } from 'rxjs/operators';
 import { Observable, BehaviorSubject, timer, Subscription } from 'rxjs';
 import { AuthenticationService } from '../sites/authentication.service';
+import { PlayerService } from '../player/player.service';
 
 @Injectable({
   providedIn: 'root'

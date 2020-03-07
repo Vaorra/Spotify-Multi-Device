@@ -24,9 +24,6 @@ export class AuthenticationService {
     if (state) {
       this.authenticate(state).subscribe();
     }
-    // REMOVE THIS IN PRODUCTION
-    // colin8442;
-    // ks5ey129m3sazez0xb4eo01kd
   }
 
   getSpotifyId(): string {

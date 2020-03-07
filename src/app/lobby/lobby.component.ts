@@ -6,6 +6,8 @@ import { AuthenticationService } from '../sites/authentication.service';
 import { MatDialog } from '@angular/material/dialog';
 import { JoinComponent } from './join/join.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { PlayerService } from '../player/player.service';
+import { Player } from '../player/player.model';
 
 @Component({
   selector: 'app-lobby',
@@ -15,17 +17,24 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class LobbyComponent implements OnInit {
   spotifyId: string;
   lobby: Lobby;
+  player: Player;
 
   defaultProfilePicture = 'https://www.eguardtech.com/wp-content/uploads/2018/08/Network-Profile.png';
 
   constructor(private router: Router, private lobbyService: LobbyService, private authenticationService: AuthenticationService,
+              private playerService: PlayerService,
               public dialog: MatDialog, private snackBar: MatSnackBar) {
+
     this.authenticationService.onSpotifyIdChange.subscribe((newSpotifyId) => {
       this.spotifyId = newSpotifyId;
     });
 
     this.lobbyService.onLobbyChange.subscribe((lobby) => {
       this.lobby = lobby;
+    });
+
+    this.playerService.onPlayerChange.subscribe((player) => {
+      this.player = player;
     });
   }
 

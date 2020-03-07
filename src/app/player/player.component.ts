@@ -3,6 +3,8 @@ import { Lobby, Song } from '../lobby/lobby.model';
 import { LobbyService } from '../lobby/lobby.service';
 import { PlayerService } from './player.service';
 import { Player } from './player.model';
+import { timer, Observable, Subscribable, Subscription } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-player',
@@ -15,24 +17,46 @@ export class PlayerComponent implements OnInit {
   player: Player;
   currentSong: Song;
 
-  currentPosition: number; // in ms
-
   playerCurrentTimeText = '0:00';
   playerMaxTimeText = '0:00';
+
+  refreshRate = 200;
+
+  onTick: Observable<void>; // clock Interval
+  clock: Subscription;
 
   constructor(private playerService: PlayerService) {
     playerService.onPlayerChange.subscribe((player) => {
       if (player) {
         this.player = player;
+
         if (this.player.queue.length > 0) {
           this.currentSong = this.player.queue[this.player.queuePosition];
-          this.currentPosition = this.player.position;
 
-          this.playerCurrentTimeText = this.getCurrentTime();
-          this.playerMaxTimeText = this.getMaxTime();
+          this.updateCurrentTime();
+          this.updateMaxTime();
+
+          if (player.isSongPlaying) {
+            this.startClock();
+          } else {
+            this.endClock();
+          }
         }
       }
     });
+
+    this.onTick = timer(0, this.refreshRate).pipe(
+      map(() => {
+        if (this.player.position + this.refreshRate > this.currentSong.duration) {
+          this.player.position = this.currentSong.duration;
+        } else {
+          this.player.position += this.refreshRate;
+        }
+
+        this.updateCurrentTime();
+        this.updateMaxTime();
+      })
+    );
   }
 
   ngOnInit() {
@@ -48,22 +72,39 @@ export class PlayerComponent implements OnInit {
 
   onPause() {
     this.playerService.pause(this.player.id).subscribe();
+
+    this.endClock();
   }
 
   onResume() {
     this.playerService.resume(this.player.id).subscribe();
+
+    this.startClock();
   }
 
   onJump() {
-    this.playerService.jump(this.player.id, this.currentPosition).subscribe();
+    this.playerService.jump(this.player.id, this.player.position).subscribe();
   }
 
-  private getCurrentTime() {
-    return this.getMinutes(this.currentPosition) + ':' + this.getSeconds(this.currentPosition);
+  private startClock() {
+    if (!this.clock) {
+      this.clock = this.onTick.subscribe();
+    }
   }
 
-  private getMaxTime() {
-    return this.getMinutes(this.currentSong.duration) + ':' + this.getSeconds(this.currentSong.duration);
+  private endClock() {
+    if (this.clock) {
+      this.clock.unsubscribe();
+      this.clock = undefined;
+    }
+  }
+
+  private updateCurrentTime() {
+    this.playerCurrentTimeText = this.getMinutes(this.player.position) + ':' + this.getSeconds(this.player.position);
+  }
+
+  private updateMaxTime() {
+    this.playerMaxTimeText = this.getMinutes(this.currentSong.duration) + ':' + this.getSeconds(this.currentSong.duration);
   }
 
   private getMinutes(ms: number) {
@@ -71,7 +112,7 @@ export class PlayerComponent implements OnInit {
   }
 
   private getSeconds(ms: number) {
-    let secondsLeft = ms % 60000 / 1000;
+    let secondsLeft = Math.floor(ms % 60000 / 1000);
 
     if (secondsLeft < 10) {
       return '0' + secondsLeft.toFixed();
