@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Lobby } from './lobby.model';
+import { Lobby, User, LocalUser } from './lobby.model';
 import { LobbyService } from './lobby.service';
 import { Router } from '@angular/router';
 import { AuthenticationService } from '../sites/authentication.service';
@@ -15,7 +15,7 @@ import { Player } from '../player/player.model';
   styleUrls: ['./lobby.component.scss']
 })
 export class LobbyComponent implements OnInit {
-  spotifyId: string;
+  localUser: LocalUser;
   lobby: Lobby;
   player: Player;
 
@@ -25,8 +25,8 @@ export class LobbyComponent implements OnInit {
               private playerService: PlayerService,
               public dialog: MatDialog, private snackBar: MatSnackBar) {
 
-    this.authenticationService.onSpotifyIdChange.subscribe((newSpotifyId) => {
-      this.spotifyId = newSpotifyId;
+    this.authenticationService.onLocalUserChange.subscribe((newLocalUser) => {
+      this.localUser = newLocalUser;
     });
 
     this.lobbyService.onLobbyChange.subscribe((lobby) => {
@@ -46,7 +46,7 @@ export class LobbyComponent implements OnInit {
   }
 
   onCreateLobby() {
-    this.lobbyService.createLobby(this.spotifyId).subscribe();
+    this.lobbyService.createLobby(this.localUser.spotifyId).subscribe();
   }
 
   onJoinLobby() {
@@ -58,7 +58,7 @@ export class LobbyComponent implements OnInit {
       if (result) {
         this.lobbyService.validateLobbyId(result).subscribe((valid) => {
           if (valid) {
-            this.lobbyService.joinLobby(this.spotifyId, result).subscribe(() => {
+            this.lobbyService.joinLobby(this.localUser.spotifyId, result).subscribe(() => {
               this.snackBar.open('Successfully joined the lobby!', 'Dismiss');
             });
           } else {
@@ -70,7 +70,7 @@ export class LobbyComponent implements OnInit {
   }
 
   onLeaveLobby() {
-    this.lobbyService.leaveLobby(this.spotifyId, this.lobby.id).subscribe();
+    this.lobbyService.leaveLobby(this.localUser.spotifyId, this.lobby.id).subscribe();
   }
 
   onCloseLobby() {

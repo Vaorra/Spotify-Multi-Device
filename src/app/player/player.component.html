@@ -5,7 +5,7 @@
     <mat-card-subtitle>{{ currentSong.artistNames.join(", ") }}</mat-card-subtitle>
   </mat-card-header>
   <mat-card-content>
-    <mat-grid-list cols='3' rowHeight="50px">
+    <mat-grid-list cols='3' rowHeight="55px">
       <mat-grid-tile colspan='3'>
         <span>{{ playerCurrentTimeText }}</span>
         <mat-slider [(ngModel)]='player.position' (change)="onJump()" min='0' [max]='currentSong ? currentSong.duration : 0'></mat-slider>
@@ -20,6 +20,17 @@
       </mat-grid-tile>
       <mat-grid-tile>
         <button mat-stroked-button (click)="onNext()">Next</button>
+      </mat-grid-tile>
+      <mat-grid-tile colspan="2">
+        <mat-form-field>
+          <mat-label>Device</mat-label>
+          <mat-select [(ngModel)]="player.currentDeviceId">
+            <mat-option *ngFor="let device of player.devices" [value]="device.spotifyid">{{ device.name }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </mat-grid-tile>
+      <mat-grid-tile>
+        <button mat-stroked-button (click)="onSelectDevice()">Select</button>
       </mat-grid-tile>
     </mat-grid-list>
   </mat-card-content>

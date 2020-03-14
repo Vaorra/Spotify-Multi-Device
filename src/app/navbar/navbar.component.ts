@@ -10,7 +10,7 @@ import { AuthenticationService } from '../sites/authentication.service';
 export class NavbarComponent implements OnInit {
 
   @Input() back: string;
-  @Input() spotifyId: string;
+  @Input() isLoggedIn: string;
   loginUrl: string;
 
   constructor(private router: Router, private authenticationService: AuthenticationService) {

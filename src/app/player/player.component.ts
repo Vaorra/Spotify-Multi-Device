@@ -35,31 +35,24 @@ export class PlayerComponent implements OnInit {
 
           this.updateCurrentTime();
           this.updateMaxTime();
-
-          if (player.isSongPlaying) {
-            this.startClock();
-          } else {
-            this.endClock();
-          }
         }
       }
     });
 
-    this.onTick = timer(0, this.refreshRate).pipe(
-      map(() => {
-        if (this.player.position + this.refreshRate > this.currentSong.duration) {
-          this.player.position = this.currentSong.duration;
-        } else {
-          this.player.position += this.refreshRate;
-        }
+    playerService.onPlayerPositionChange.subscribe((position) => {
+      if (position) {
+        this.player.position = position;
 
         this.updateCurrentTime();
-        this.updateMaxTime();
-      })
-    );
+      }
+    });
   }
 
   ngOnInit() {
+  }
+
+  onSelectDevice() {
+    this.playerService.selectDevice(this.player.id, this.player.currentDeviceId).subscribe();
   }
 
   onPrevious() {
@@ -72,32 +65,16 @@ export class PlayerComponent implements OnInit {
 
   onPause() {
     this.playerService.pause(this.player.id).subscribe();
-
-    this.endClock();
   }
 
   onResume() {
     this.playerService.resume(this.player.id).subscribe();
-
-    this.startClock();
   }
 
   onJump() {
     this.playerService.jump(this.player.id, this.player.position).subscribe();
   }
 
-  private startClock() {
-    if (!this.clock) {
-      this.clock = this.onTick.subscribe();
-    }
-  }
-
-  private endClock() {
-    if (this.clock) {
-      this.clock.unsubscribe();
-      this.clock = undefined;
-    }
-  }
 
   private updateCurrentTime() {
     this.playerCurrentTimeText = this.getMinutes(this.player.position) + ':' + this.getSeconds(this.player.position);

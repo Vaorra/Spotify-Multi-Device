@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthenticationService } from '../authentication.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { User } from 'src/app/lobby/lobby.model';
 
 @Component({
   selector: 'app-home',
@@ -10,11 +11,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class HomeComponent implements OnInit {
 
   title = 'Spotify-Multi-Device';
-  spotifyId: string;
+  user: User;
 
   constructor(private router: Router, private route: ActivatedRoute, private authenticationService: AuthenticationService) {
-    this.authenticationService.onSpotifyIdChange.subscribe((newSpotifyId) => {
-      this.spotifyId = newSpotifyId;
+    this.authenticationService.onLocalUserChange.subscribe((newUser) => {
+      this.user = newUser;
     });
   }
 

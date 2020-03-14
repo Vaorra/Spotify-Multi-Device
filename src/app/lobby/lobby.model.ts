@@ -8,14 +8,19 @@ export interface Lobby {
   version: number;
 }
 
+export interface LocalUser extends User {
+  isPremium: boolean;
+}
+
 export interface User {
   spotifyId: string;
-  spotifyDisplayName: string | undefined;
-  spotifyProfilePictureUrl: string | undefined;
+  displayName: string | undefined;
+  profilePictureUrl: string | undefined;
 }
 
 export interface Song {
   spotifyId: string;
+  spotifyUri: string;
   queuer: User;
   name: string;
   artistNames: string[];

@@ -31,7 +31,7 @@ export class LobbyService {
     // Lobby update interval (every 10 seconds)
     this.onUpdate = timer(0, this.refreshRate).pipe(
       map(() => {
-        this.getLobbyFromUser(authenticationService.getSpotifyId()).subscribe((lobbyId) => {
+        this.getLobbyFromUser(authenticationService.getLocalUserId()).subscribe((lobbyId) => {
           if (lobbyId) {
             this.getLobbyVersion(lobbyId).subscribe((version) => {
               if (!this.lobby.value || version > this.lobby.value.version) {
@@ -46,7 +46,7 @@ export class LobbyService {
     );
 
     // Start updater on Login
-    this.authenticationService.onSpotifyIdChange.subscribe((newSpotifyId) => {
+    this.authenticationService.onLocalUserChange.subscribe((newSpotifyId) => {
       if (newSpotifyId) {
         this.updater = this.onUpdate.subscribe();
       } else {

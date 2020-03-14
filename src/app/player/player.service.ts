@@ -20,12 +20,18 @@ export class PlayerService {
   private player: BehaviorSubject<Player>;
   public onPlayerChange: Observable<Player>;
 
+  private playerPosition: BehaviorSubject<number>;
+  public onPlayerPositionChange: Observable<number>;
+
   public onUpdate: Observable<void>;
   private updater: Subscription;
 
   constructor(private http: HttpClient, private lobbyService: LobbyService) {
     this.player = new BehaviorSubject(null);
     this.onPlayerChange = this.player.asObservable();
+
+    this.playerPosition = new BehaviorSubject(0);
+    this.onPlayerPositionChange = this.playerPosition.asObservable();
 
     // Player update interval
     this.onUpdate = timer(0, this.refreshRate).pipe(
@@ -35,6 +41,10 @@ export class PlayerService {
         this.getPlayerVersion(playerId).subscribe((version) => {
           if (!this.player.value || version > this.player.value.version) {
             this.setPlayer(playerId);
+          } else if (version >= this.player.value.version) {
+            this.getPlayerPosition(playerId).subscribe((position) => {
+              this.playerPosition.next(position);
+            });
           }
         });
       })
@@ -44,7 +54,9 @@ export class PlayerService {
       if (newLobby) {
         this.updater = this.onUpdate.subscribe();
       } else {
-        this.updater.unsubscribe();
+        if (this.updater) {
+          this.updater.unsubscribe();
+        }
       }
     });
   }
@@ -56,6 +68,20 @@ export class PlayerService {
       map((result) => {
         if (result) {
           return result.version;
+        }
+
+        return null;
+      })
+    );
+  }
+
+  private getPlayerPosition(playerId: string) {
+    return this.http.get<{ position: number }>(this.endpoint + '/position/' + playerId, {
+      headers: this.header
+    }).pipe(
+      map((result) => {
+        if (result) {
+          return result.position;
         }
 
         return null;
@@ -130,5 +156,16 @@ export class PlayerService {
         this.player.next(this.player.value);
       })
     );
+  }
+
+  selectDevice(playerId: string, deviceId: string) {
+    return this.http.patch<void>(this.endpoint + '/device/select', { playerId, deviceId }, {
+      headers: this.header
+    }).pipe(
+      map(() => {
+        this.player.value.currentDeviceId = deviceId;
+        this.player.next(this.player.value);
+      })
+    )
   }
 }

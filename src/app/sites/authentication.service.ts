@@ -2,22 +2,23 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { User, LocalUser } from '../lobby/lobby.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthenticationService {
   endpoint = 'https://api.smd.intnet.ch';
-  private spotifyId: BehaviorSubject<string>;
-  public onSpotifyIdChange: Observable<string>;
+  private localUser: BehaviorSubject<LocalUser>;
+  public onLocalUserChange: Observable<LocalUser>;
 
   header: HttpHeaders = new HttpHeaders({
     'Content-Type': 'application/json'
   });
 
   constructor(private http: HttpClient) {
-    this.spotifyId = new BehaviorSubject(undefined);
-    this.onSpotifyIdChange = this.spotifyId.asObservable();
+    this.localUser = new BehaviorSubject(undefined);
+    this.onLocalUserChange = this.localUser.asObservable();
 
     const state = localStorage.getItem('state');
 
@@ -26,25 +27,25 @@ export class AuthenticationService {
     }
   }
 
-  getSpotifyId(): string {
-    return this.spotifyId.value;
+  getLocalUserId(): string {
+    return this.localUser.value.spotifyId;
   }
 
   getLoginUrl(): string {
     return this.endpoint + '/login';
   }
 
-  isLoggedIn(): boolean {
-    return this.spotifyId.value ? true : false;
+  get isLoggedIn(): boolean {
+    return this.localUser.value ? true : false;
   }
 
   authenticate(state: string, code?: string) {
-    return this.http.post<{ authorized: boolean, spotifyId: string }>(this.endpoint + '/authenticate/', { state, code }, {
+    return this.http.post<{ authorized: boolean, user: LocalUser }>(this.endpoint + '/authenticate/', { state, code }, {
       headers: this.header
     }).pipe(
       map((result) => {
-        if (result.authorized && result.spotifyId) {
-          this.spotifyId.next(result.spotifyId);
+        if (result.authorized && result.user) {
+          this.localUser.next(result.user);
           localStorage.setItem('state', state);
         }
       })
@@ -53,6 +54,6 @@ export class AuthenticationService {
 
   logout() {
     localStorage.removeItem('state');
-    this.spotifyId.next(undefined);
+    this.localUser.next(undefined);
   }
 }

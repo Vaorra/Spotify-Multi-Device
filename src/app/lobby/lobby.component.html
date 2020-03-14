@@ -1,6 +1,6 @@
 <mat-grid-list cols="3" rowHeight="50px">
-  <mat-grid-tile *ngIf="spotifyId" colspan="3">
-    <h4>User - {{ spotifyId }}</h4>
+  <mat-grid-tile *ngIf="localUser" colspan="3">
+    <h4>User - {{ localUser.displayName }}</h4>
   </mat-grid-tile>
   <mat-grid-tile colspan="3">
     <h4 *ngIf="!lobby">Create or join a lobby</h4>
@@ -8,13 +8,13 @@
   </mat-grid-tile>
   <mat-grid-tile>
     <button *ngIf="lobby" mat-stroked-button (click)="onQueueSong()">Queue</button>
-    <button *ngIf="!lobby" mat-stroked-button (click)="onCreateLobby()">Create</button>
+    <button *ngIf="!lobby && localUser.isPremium" mat-stroked-button (click)="onCreateLobby()">Create</button>
   </mat-grid-tile>
   <mat-grid-tile>
     <button *ngIf="!lobby" mat-stroked-button (click)="onJoinLobby()">Join</button>
     <div *ngIf="lobby">
-      <button *ngIf="lobby.leaderSpotifyId !== spotifyId" mat-stroked-button (click)="onLeaveLobby()">Leave</button>
-      <button *ngIf="lobby.leaderSpotifyId === spotifyId" mat-stroked-button (click)="onCloseLobby()">Close</button>
+      <button *ngIf="lobby.leaderSpotifyId !== localUser.spotifyId" mat-stroked-button (click)="onLeaveLobby()">Leave</button>
+      <button *ngIf="lobby.leaderSpotifyId === localUser.spotifyId" mat-stroked-button (click)="onCloseLobby()">Close</button>
     </div>
   </mat-grid-tile>
 </mat-grid-list>
@@ -28,18 +28,18 @@
 </mat-toolbar>
 <mat-list *ngIf="lobby && lobby.participantUsers">
   <mat-list-item *ngFor="let participant of lobby.participantUsers">
-    <img *ngIf="participant.spotifyProfilePictureUrl" matListAvatar [src]="participant.spotifyProfilePictureUrl" alt="...">
-    <img *ngIf="!participant.spotifyProfilePictureUrl" matListAvatar [src]="defaultProfilePicture" alt="...">
-    <h4 *ngIf="participant.spotifyId === lobby.leaderSpotifyId" mat-line><b>{{ participant.spotifyDisplayName }} (Leader)</b></h4>
-    <h4 *ngIf="participant.spotifyId !== lobby.leaderSpotifyId" mat-line>{{ participant.spotifyDisplayName }}</h4>
+    <img *ngIf="participant.profilePictureUrl" matListAvatar [src]="participant.profilePictureUrl" alt="...">
+    <img *ngIf="!participant.profilePictureUrl" matListAvatar [src]="defaultProfilePicture" alt="...">
+    <h4 *ngIf="participant.spotifyId === lobby.leaderSpotifyId" mat-line><b>{{ participant.displayName }} (Leader)</b></h4>
+    <h4 *ngIf="participant.spotifyId !== lobby.leaderSpotifyId" mat-line>{{ participant.displayName }}</h4>
   </mat-list-item>
 </mat-list>
 <mat-divider></mat-divider>
 <mat-toolbar>
   <h4>Queue</h4>
 </mat-toolbar>
-<mat-list *ngIf="lobby && player.queue">
-  <mat-list-item *ngFor="let song of player.queue.slice(lobby.currentSongIndex + 1)">
+<mat-list *ngIf="lobby && player && player.queue">
+  <mat-list-item *ngFor="let song of player.queue.slice(player.queuePosition + 1)">
     <img matListAvatar [src]="song.imageUrl" alt="...">
     <h4 mat-line>{{ song.name }}</h4>
     <p mat-line>{{ song.artistNames.join(", ") }}</p>
