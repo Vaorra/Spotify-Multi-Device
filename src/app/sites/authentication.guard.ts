@@ -20,7 +20,7 @@ export class AuthenticationGuard implements CanActivate {
       return true;
     }
 
-    window.location.href = this.authenticationService.getLoginUrl(next.url.toString());
+    window.open(this.authenticationService.getLoginUrl());
     return false;
   }
 }

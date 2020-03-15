@@ -11,13 +11,15 @@ export class NavbarComponent implements OnInit {
 
   @Input() back: string;
   @Input() isLoggedIn: string;
-  loginUrl: string;
 
   constructor(private router: Router, private authenticationService: AuthenticationService) {
-    this.loginUrl = this.authenticationService.getLoginUrl();
   }
 
   ngOnInit() {
+  }
+
+  onLogin() {
+    window.open(this.authenticationService.getLoginUrl(), 'Login', 'width=400,height=600');
   }
 
   onLogout() {
@@ -25,7 +27,7 @@ export class NavbarComponent implements OnInit {
   }
 
   goBack() {
-      this.router.navigate([this.back]);
+    this.router.navigate([this.back]);
   }
 
 }

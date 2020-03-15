@@ -31,11 +31,7 @@ export class AuthenticationService {
     return this.localUser.value.spotifyId;
   }
 
-  getLoginUrl(origin?: string): string {
-    if (origin) {
-      return this.endpoint + '/login?origin=' + encodeURIComponent(origin);
-    }
-
+  getLoginUrl(): string {
     return this.endpoint + '/login';
   }
 
