@@ -13,7 +13,11 @@ export class LoginComponent implements OnInit {
     this.route.queryParams.subscribe((params) => {
       if (params['code'] && params['state']) {
         this.authenticationService.authenticate(params['state'], params['code']).subscribe(() => {
-          router.navigate(['home']);
+          if (params['origin']) {
+            router.navigateByUrl('/' + params['origin']);
+          } else {
+            router.navigate(['/home']);
+          }
         });
       }
     });

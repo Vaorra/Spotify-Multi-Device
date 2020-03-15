@@ -34,13 +34,18 @@ import { TestComponent } from './test/test.component';
 import { LoginComponent } from './sites/login/login.component';
 import { JoinComponent } from './lobby/join/join.component';
 import { FormsModule } from '@angular/forms';
+import { AuthenticationGuard } from './sites/authentication.guard';
+import { InvitationComponent } from './sites/invitation/invitation.component';
+import { NotfoundComponent } from './sites/notfound/notfound.component';
 
 const appRoutes: Routes = [
-  { path: '', component: HomeComponent, pathMatch: 'full'},
+  { path: '', component: HomeComponent, pathMatch: 'full' },
   { path: 'home', component: HomeComponent },
   { path: 'login', component: LoginComponent },
   { path: 'search/song', component: SearchSongComponent },
-  { path: 'test', component: TestComponent }
+  { path: 'invitation/:id', component: InvitationComponent, canActivate: [AuthenticationGuard] },
+  { path: 'test', component: TestComponent },
+  { path: '**', component: NotfoundComponent }
 ];
 
 @NgModule({
@@ -57,7 +62,9 @@ const appRoutes: Routes = [
     SearchSongComponent,
     FriendsComponent,
     TestComponent,
-    JoinComponent
+    JoinComponent,
+    InvitationComponent,
+    NotfoundComponent
   ],
   imports: [
     BrowserModule,
@@ -89,7 +96,11 @@ const appRoutes: Routes = [
   entryComponents: [
     JoinComponent
   ],
-  providers: [],
-  bootstrap: [AppComponent]
+  providers: [
+    AuthenticationGuard
+  ],
+  bootstrap: [
+    AppComponent
+  ]
 })
 export class AppModule { }
