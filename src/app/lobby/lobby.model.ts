@@ -9,6 +9,7 @@ export interface Lobby {
 }
 
 export interface LocalUser extends User {
+  footprint: string; // spotify login state
   isPremium: boolean;
 }
 

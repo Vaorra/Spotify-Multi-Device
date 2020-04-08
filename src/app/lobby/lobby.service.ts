@@ -11,8 +11,8 @@ import { PlayerService } from '../player/player.service';
 })
 export class LobbyService {
 
-  endpoint = 'https://api.smd.intnet.ch/lobbies';
-  refreshRate = 1000;
+  private endpoint = 'https://api.smd.intnet.ch/lobbies';
+  private refreshRate = 1000;
 
   header: HttpHeaders = new HttpHeaders({
     'Content-Type': 'application/json'

@@ -15,9 +15,9 @@ export class InvitationComponent implements OnInit {
 
   ngOnInit() {
     this.route.paramMap.subscribe((params) => {
-      console.log(this.authenticationService.getLocalUserId() + 'joined' + params.get('id'))
-      this.lobbyService.joinLobby(this.authenticationService.getLocalUserId(), params.get('id'));
-      this.router.navigate(['/home']);
+      this.lobbyService.joinLobby(this.authenticationService.getLocalUserId(), params.get('id')).subscribe(() => {
+        this.router.navigate(['/home']);
+      });
     });
   }
 

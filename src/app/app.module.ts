@@ -31,7 +31,6 @@ import { MatSelectModule } from '@angular/material/select';
 import { FriendsComponent } from './friends/friends.component';
 import { HttpClientModule } from '@angular/common/http';
 import { TestComponent } from './test/test.component';
-import { LoginComponent } from './sites/login/login.component';
 import { JoinComponent } from './lobby/join/join.component';
 import { FormsModule } from '@angular/forms';
 import { AuthenticationGuard } from './sites/authentication.guard';
@@ -41,7 +40,6 @@ import { NotfoundComponent } from './sites/notfound/notfound.component';
 const appRoutes: Routes = [
   { path: '', component: HomeComponent, pathMatch: 'full' },
   { path: 'home', component: HomeComponent },
-  { path: 'login', component: LoginComponent },
   { path: 'search/song', component: SearchSongComponent },
   { path: 'invitation/:id', component: InvitationComponent, canActivate: [AuthenticationGuard] },
   { path: 'test', component: TestComponent },
@@ -58,7 +56,6 @@ const appRoutes: Routes = [
     FriendsComponent,
     // Sites
     HomeComponent,
-    LoginComponent,
     SearchSongComponent,
     FriendsComponent,
     TestComponent,

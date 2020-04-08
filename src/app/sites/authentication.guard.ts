@@ -16,11 +16,11 @@ export class AuthenticationGuard implements CanActivate {
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
 
-    if (this.authenticationService.isLoggedIn) {
-      return true;
+    if (!this.authenticationService.isLoggedIn) {
+      this.authenticationService.login();
+      return false;
     }
 
-    window.open(this.authenticationService.getLoginUrl());
-    return false;
+    return true;
   }
 }

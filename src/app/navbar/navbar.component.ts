@@ -19,7 +19,7 @@ export class NavbarComponent implements OnInit {
   }
 
   onLogin() {
-    window.open(this.authenticationService.getLoginUrl(), 'Login', 'width=400,height=600');
+    this.authenticationService.login();
   }
 
   onLogout() {
