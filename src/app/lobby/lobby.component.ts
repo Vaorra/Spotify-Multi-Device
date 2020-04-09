@@ -19,6 +19,7 @@ export class LobbyComponent implements OnInit {
   lobby: Lobby;
   player: Player;
 
+
   defaultProfilePicture = 'https://www.eguardtech.com/wp-content/uploads/2018/08/Network-Profile.png';
 
   constructor(private router: Router, private lobbyService: LobbyService, private authenticationService: AuthenticationService,
@@ -42,7 +43,7 @@ export class LobbyComponent implements OnInit {
   }
 
   onQueueSong() {
-    this.router.navigate(['search']);
+    this.router.navigate(['search-song']);
   }
 
   onCreateLobby() {

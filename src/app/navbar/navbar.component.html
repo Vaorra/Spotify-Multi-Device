@@ -3,6 +3,6 @@
     <mat-icon aria-hidden="false" aria-label="Back">arrow_back</mat-icon>
   </a>
   <span>Spotify Multi Device</span>
-  <button *ngIf="!isLoggedIn" mat-button (click)="onLogin()">Log In</button>
-  <button *ngIf="isLoggedIn" mat-button (click)="onLogout()">Log Out</button>
+  <button *ngIf="isLoggedIn === false" mat-button (click)="onLogin()">Log In</button>
+  <button *ngIf="isLoggedIn === true" mat-button (click)="onLogout()">Log Out</button>
 </mat-toolbar>

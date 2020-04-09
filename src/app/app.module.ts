@@ -27,6 +27,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatInputModule } from '@angular/material/input';
 import { MatCardModule } from '@angular/material/card';
 import { MatSelectModule } from '@angular/material/select';
+import { MatSidenavModule } from '@angular/material/sidenav';
 
 import { FriendsComponent } from './friends/friends.component';
 import { HttpClientModule } from '@angular/common/http';
@@ -40,7 +41,7 @@ import { NotfoundComponent } from './sites/notfound/notfound.component';
 const appRoutes: Routes = [
   { path: '', component: HomeComponent, pathMatch: 'full' },
   { path: 'home', component: HomeComponent },
-  { path: 'search/song', component: SearchSongComponent },
+  { path: 'search-song', component: SearchSongComponent },
   { path: 'invitation/:id', component: InvitationComponent, canActivate: [AuthenticationGuard] },
   { path: 'test', component: TestComponent },
   { path: '**', component: NotfoundComponent }
@@ -88,7 +89,8 @@ const appRoutes: Routes = [
     MatSnackBarModule,
     MatInputModule,
     MatCardModule,
-    MatSelectModule
+    MatSelectModule,
+    MatSidenavModule
   ],
   entryComponents: [
     JoinComponent

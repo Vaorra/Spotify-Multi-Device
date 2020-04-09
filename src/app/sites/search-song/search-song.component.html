@@ -1,1 +1,18 @@
-<p>search-song works!</p>
+<app-navbar></app-navbar>
+<mat-grid-list cols="7" rowHeight="50px">
+  <mat-grid-tile>
+    <button mat-icon-button>
+      <mat-icon class="material-icons" md-48>arrow_back</mat-icon>
+    </button>
+  </mat-grid-tile>
+  <mat-grid-tile colspan="5">
+    <form>
+      <input placeholder="Search song...">
+    </form>
+  </mat-grid-tile>
+  <mat-grid-tile>
+    <button mat-icon-button>
+      <mat-icon class="material-icons">search</mat-icon>
+    </button>
+  </mat-grid-tile>
+</mat-grid-list>

@@ -10,7 +10,7 @@ import { AuthenticationService } from '../sites/authentication.service';
 export class NavbarComponent implements OnInit {
 
   @Input() back: string;
-  @Input() isLoggedIn: string;
+  @Input() isLoggedIn: boolean;
 
   constructor(private router: Router, private authenticationService: AuthenticationService) {
   }
@@ -19,7 +19,9 @@ export class NavbarComponent implements OnInit {
   }
 
   onLogin() {
-    this.authenticationService.login();
+    this.authenticationService.login().subscribe(() => {
+      console.log('Finished');
+    });
   }
 
   onLogout() {

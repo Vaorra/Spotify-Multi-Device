@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { BehaviorSubject, Observable, Subscription, timer, of, pipe } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { BehaviorSubject, Observable, Subscription, timer, of, pipe, empty } from 'rxjs';
+import { map, skipWhile, single, first, switchMap } from 'rxjs/operators';
 import { User, LocalUser } from '../lobby/lobby.model';
 import { v1 as uuidv1 } from 'uuid';
 
@@ -12,6 +12,8 @@ export class AuthenticationService {
 
   private endpoint = 'https://api.smd.intnet.ch';
   private refreshRate = 1000;
+
+  private loginStatusRefreshRate = 500;
 
   private localUser: BehaviorSubject<LocalUser>;
   public onLocalUserChange: Observable<LocalUser>;
@@ -75,15 +77,21 @@ export class AuthenticationService {
     );
   }
 
-  login() {
+  login(): Observable<void> {
     this.state = uuidv1();
     let loginUrl = this.endpoint + '/login?state=' + encodeURIComponent(this.state);
 
     let size = { width: 590, height: 920 };
     let leftTop = { left: (window.outerWidth - size.width) / 2, top: (window.outerHeight - size.height) / 2 };
 
-    window.open(loginUrl, 'Login',
+    let loginWindow = window.open(loginUrl, 'Login',
     'width=' + size.width + ',height=' + size.height + ',left=' + leftTop.left + ',top=' + leftTop.top);
+
+    return timer(0, this.loginStatusRefreshRate).pipe(
+      first(() => loginWindow.closed),
+      switchMap(() => of(undefined))
+    );
+
   }
 
   logout() {

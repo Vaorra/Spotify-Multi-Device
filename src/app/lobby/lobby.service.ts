@@ -28,7 +28,7 @@ export class LobbyService {
     this.lobby = new BehaviorSubject(null);
     this.onLobbyChange = this.lobby.asObservable();
 
-    // Lobby update interval (every 10 seconds)
+    // Lobby update interval (every 1 seconds)
     this.onUpdate = timer(0, this.refreshRate).pipe(
       map(() => {
         this.getLobbyFromUser(authenticationService.getLocalUserId()).subscribe((lobbyId) => {
