@@ -19,9 +19,7 @@ export class NavbarComponent implements OnInit {
   }
 
   onLogin() {
-    this.authenticationService.login().subscribe(() => {
-      console.log('Finished');
-    });
+    this.authenticationService.login().subscribe();
   }
 
   onLogout() {

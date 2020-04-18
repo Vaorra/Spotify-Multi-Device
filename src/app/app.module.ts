@@ -37,6 +37,7 @@ import { FormsModule } from '@angular/forms';
 import { AuthenticationGuard } from './sites/authentication.guard';
 import { InvitationComponent } from './sites/invitation/invitation.component';
 import { NotfoundComponent } from './sites/notfound/notfound.component';
+import { InviteComponent } from './lobby/invite/invite.component';
 
 const appRoutes: Routes = [
   { path: '', component: HomeComponent, pathMatch: 'full' },
@@ -62,7 +63,8 @@ const appRoutes: Routes = [
     TestComponent,
     JoinComponent,
     InvitationComponent,
-    NotfoundComponent
+    NotfoundComponent,
+    InviteComponent
   ],
   imports: [
     BrowserModule,
@@ -93,7 +95,8 @@ const appRoutes: Routes = [
     MatSidenavModule
   ],
   entryComponents: [
-    JoinComponent
+    JoinComponent,
+    InviteComponent
   ],
   providers: [
     AuthenticationGuard

@@ -8,6 +8,8 @@ import { JoinComponent } from './join/join.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { PlayerService } from '../player/player.service';
 import { Player } from '../player/player.model';
+import { InviteComponent } from './invite/invite.component';
+import { InvitationService } from './invitation/invitation.service';
 
 @Component({
   selector: 'app-lobby',
@@ -23,7 +25,7 @@ export class LobbyComponent implements OnInit {
   defaultProfilePicture = 'https://www.eguardtech.com/wp-content/uploads/2018/08/Network-Profile.png';
 
   constructor(private router: Router, private lobbyService: LobbyService, private authenticationService: AuthenticationService,
-              private playerService: PlayerService,
+              private playerService: PlayerService, private invitationService: InvitationService,
               public dialog: MatDialog, private snackBar: MatSnackBar) {
 
     this.authenticationService.onLocalUserChange.subscribe((newLocalUser) => {
@@ -76,5 +78,16 @@ export class LobbyComponent implements OnInit {
 
   onCloseLobby() {
     this.lobbyService.closeLobby(this.lobby.id).subscribe();
+  }
+
+  onInvite() {
+    this.invitationService.createInvitation(this.lobby.id).subscribe((invitation) => {
+      this.dialog.open(InviteComponent, {
+        data: {
+          qrcode: invitation.qrcode
+        },
+        width: '300px'
+      });
+    });
   }
 }

@@ -17,6 +17,9 @@
       <button *ngIf="lobby.leaderSpotifyId === localUser.spotifyId" mat-stroked-button (click)="onCloseLobby()">Close</button>
     </div>
   </mat-grid-tile>
+  <mat-grid-tile>
+    <button *ngIf="lobby && lobby.leaderSpotifyId === localUser.spotifyId" mat-stroked-button (click)="onInvite()">Invite</button>
+  </mat-grid-tile>
 </mat-grid-list>
 <mat-divider></mat-divider>
 <mat-toolbar>
