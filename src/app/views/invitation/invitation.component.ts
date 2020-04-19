@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { LobbyService } from 'src/app/lobby/lobby.service';
-import { AuthenticationService } from '../authentication.service';
+import { LobbyService } from 'src/app/components/lobby/lobby.service';
+import { AuthenticationService } from '../../core/authentication/authentication.service';
 
 @Component({
   selector: 'app-invitation',

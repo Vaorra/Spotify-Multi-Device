@@ -1,9 +1,9 @@
 import { Injectable, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { tap, map } from 'rxjs/operators';
-import { Player } from './player.model';
 import { BehaviorSubject, Observable, Subscription, timer } from 'rxjs';
 import { LobbyService } from '../lobby/lobby.service';
+import { Player } from 'src/app/api/player';
 
 @Injectable({
   providedIn: 'root'

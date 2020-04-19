@@ -1,0 +1,30 @@
+<app-navbar></app-navbar>
+<mat-grid-list cols="7" rowHeight="50px">
+  <mat-grid-tile>
+    <button mat-icon-button (click)="onBack()">
+      <mat-icon class="material-icons">arrow_back</mat-icon>
+    </button>
+  </mat-grid-tile>
+  <mat-grid-tile colspan="5">
+    <form>
+      <mat-form-field floatLabel='never'>
+        <input matInput placeholder="Search song..." [(ngModel)]="query" (ngModelChange)="onSearch()" name="queryText">
+      </mat-form-field>
+    </form>
+  </mat-grid-tile>
+  <mat-grid-tile>
+    <button mat-icon-button (click)="onSearch()">
+      <mat-icon class="material-icons">search</mat-icon>
+    </button>
+  </mat-grid-tile>
+</mat-grid-list>
+<mat-list>
+  <mat-list-item *ngFor="let song of searchResults">
+    <img matListAvatar [src]="song.imageUrl" alt="...">
+    <h4 mat-line>{{ song.name }}</h4>
+    <p mat-line>{{ song.artistNames.join(", ") }}</p>
+    <button mat-icon-button (click)="onAddToQueue(song.spotifyId)">
+      <mat-icon class="material-icons">add</mat-icon>
+    </button>
+  </mat-list-item>
+</mat-list>

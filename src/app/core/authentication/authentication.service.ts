@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject, Observable, Subscription, timer, of, pipe, empty } from 'rxjs';
 import { map, skipWhile, single, first, switchMap } from 'rxjs/operators';
-import { User, LocalUser } from '../lobby/lobby.model';
 import { v1 as uuidv1 } from 'uuid';
+import { LocalUser } from 'src/app/api/localuser';
 
 @Injectable({
   providedIn: 'root'
@@ -26,6 +26,10 @@ export class AuthenticationService {
   header: HttpHeaders = new HttpHeaders({
     'Content-Type': 'application/json'
   });
+
+  get user() {
+    return this.localUser.value;
+  }
 
   constructor(private http: HttpClient) {
 

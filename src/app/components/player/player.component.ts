@@ -1,10 +1,10 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Lobby, Song } from '../lobby/lobby.model';
 import { LobbyService } from '../lobby/lobby.service';
 import { PlayerService } from './player.service';
-import { Player } from './player.model';
 import { timer, Observable, Subscribable, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { Player } from 'src/app/api/player';
+import { Song } from 'src/app/api/song';
 
 @Component({
   selector: 'app-player',

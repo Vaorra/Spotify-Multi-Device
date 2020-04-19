@@ -1,15 +1,16 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Lobby, User, LocalUser } from './lobby.model';
 import { LobbyService } from './lobby.service';
 import { Router } from '@angular/router';
-import { AuthenticationService } from '../sites/authentication.service';
+import { AuthenticationService } from '../../core/authentication/authentication.service';
 import { MatDialog } from '@angular/material/dialog';
-import { JoinComponent } from './join/join.component';
+import { JoinComponent } from '../join/join.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { PlayerService } from '../player/player.service';
-import { Player } from '../player/player.model';
-import { InviteComponent } from './invite/invite.component';
-import { InvitationService } from './invitation/invitation.service';
+import { InviteComponent } from '../invite/invite.component';
+import { InvitationService } from '../../core/invitation/invitation.service';
+import { LocalUser } from 'src/app/api/localuser';
+import { Lobby } from 'src/app/api/lobby';
+import { Player } from 'src/app/api/player';
 
 @Component({
   selector: 'app-lobby',

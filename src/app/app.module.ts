@@ -5,11 +5,11 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule, Routes } from '@angular/router';
-import { HomeComponent } from './sites/home/home.component';
-import { NavbarComponent } from './navbar/navbar.component';
-import { PlayerComponent } from './player/player.component';
-import { LobbyComponent } from './lobby/lobby.component';
-import { SearchSongComponent } from './sites/search-song/search-song.component';
+import { HomeComponent } from './views/home/home.component';
+import { NavbarComponent } from './components/navbar/navbar.component';
+import { PlayerComponent } from './components/player/player.component';
+import { LobbyComponent } from './components/lobby/lobby.component';
+import { SearchSongComponent } from './views/search-song/search-song.component';
 
 import { MatMenuModule } from '@angular/material/menu';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -29,15 +29,15 @@ import { MatCardModule } from '@angular/material/card';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSidenavModule } from '@angular/material/sidenav';
 
-import { FriendsComponent } from './friends/friends.component';
+import { FriendsComponent } from './components/friends/friends.component';
 import { HttpClientModule } from '@angular/common/http';
 import { TestComponent } from './test/test.component';
-import { JoinComponent } from './lobby/join/join.component';
+import { JoinComponent } from './components/join/join.component';
 import { FormsModule } from '@angular/forms';
-import { AuthenticationGuard } from './sites/authentication.guard';
-import { InvitationComponent } from './sites/invitation/invitation.component';
-import { NotfoundComponent } from './sites/notfound/notfound.component';
-import { InviteComponent } from './lobby/invite/invite.component';
+import { AuthenticationGuard } from './core/authentication/authentication.guard';
+import { InvitationComponent } from './views/invitation/invitation.component';
+import { NotfoundComponent } from './views/notfound/notfound.component';
+import { InviteComponent } from './components/invite/invite.component';
 
 const appRoutes: Routes = [
   { path: '', component: HomeComponent, pathMatch: 'full' },

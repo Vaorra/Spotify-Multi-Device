@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { AuthenticationService } from 'src/app/sites/authentication.service';
-import { LobbyService } from '../lobby.service';
+import { AuthenticationService } from 'src/app/core/authentication/authentication.service';
+import { LobbyService } from '../lobby/lobby.service';
 
 @Component({
   selector: 'app-join',

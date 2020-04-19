@@ -1,4 +1,5 @@
-import { Song } from '../lobby/lobby.model';
+import { Song } from "./song";
+
 
 export interface Player {
   id: string;
@@ -16,4 +17,5 @@ export interface Device {
   spotifyid: string;
   name: string;
   type: string;
+  isActive: boolean;
 }

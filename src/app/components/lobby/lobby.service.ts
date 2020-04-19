@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Lobby } from './lobby.model';
 import { map } from 'rxjs/operators';
 import { Observable, BehaviorSubject, timer, Subscription } from 'rxjs';
-import { AuthenticationService } from '../sites/authentication.service';
+import { AuthenticationService } from '../../core/authentication/authentication.service';
 import { PlayerService } from '../player/player.service';
+import { Lobby } from 'src/app/api/lobby';
 
 @Injectable({
   providedIn: 'root'

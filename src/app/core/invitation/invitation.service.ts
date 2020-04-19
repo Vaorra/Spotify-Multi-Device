@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { map } from 'rxjs/operators';
-import { Invitation } from './invitation.model';
+import { Invitation } from 'src/app/api/invitation';
 
 @Injectable({
   providedIn: 'root'

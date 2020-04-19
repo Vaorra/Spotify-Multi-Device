@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthenticationService } from '../authentication.service';
+import { AuthenticationService } from '../../core/authentication/authentication.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { User } from 'src/app/lobby/lobby.model';
+import { User } from 'src/app/api/user';
 
 @Component({
   selector: 'app-home',
